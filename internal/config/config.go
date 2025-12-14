@@ -6,6 +6,9 @@ import (
 	"os"
 
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest"
+	"github.com/Intruct-Dev-Team/intruct-backend/pkg/migrator"
+	"github.com/Intruct-Dev-Team/intruct-backend/pkg/storage/db/postgres"
+	"github.com/Intruct-Dev-Team/intruct-backend/pkg/storage/object/s3"
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
@@ -15,12 +18,12 @@ const (
 )
 
 type Config struct {
-	// DB           postgres.Config
-	// Migrator     migrator.Config
-	Server rest.Config
-	// Minio        minio.Config
-	// IsInitDb     bool   `env:"IS_INIT_DB" env-required:"true"`
-	// JwtSecretKey string `env:"SECRET_KEY" env-required:"true"`
+	DB           postgres.Config
+	Migrator     migrator.Config
+	Server       rest.Config
+	S3           s3.Config
+	IsInitDb     bool   `env:"IS_INIT_DB" env-required:"true"`
+	JwtSecretKey string `env:"JWT_SECRET_KEY" env-required:"true"`
 }
 
 func LoadConfig(paths []string) (*Config, error) {
@@ -61,17 +64,17 @@ func (c *Config) Validate() error {
 		return fmt.Errorf("invalid server port: %d", c.Server.Port)
 	}
 
-	// if !checkPortValidation(c.DB.Port) {
-	// 	return fmt.Errorf("invalid database port: %d", c.DB.Port)
-	// }
+	if !checkPortValidation(c.DB.Port) {
+		return fmt.Errorf("invalid database port: %d", c.DB.Port)
+	}
 
-	// if !checkPortValidation(c.Migrator.Port) {
-	// 	return fmt.Errorf("invalid database (migrator) port: %d", c.DB.Port)
-	// }
+	if !checkPortValidation(c.Migrator.Port) {
+		return fmt.Errorf("invalid database (migrator) port: %d", c.DB.Port)
+	}
 
-	// if !checkPortValidation(c.Minio.Port) {
-	// 	return fmt.Errorf("invalid minio port: %d", c.Minio.Port)
-	// }
+	if !checkPortValidation(c.S3.Port) {
+		return fmt.Errorf("invalid minio port: %d", c.S3.Port)
+	}
 
 	return nil
 }
@@ -83,25 +86,25 @@ func (c *Config) LogConfig() (string, error) {
 
 	// Mask passwords
 
-	// if logConfig.DB.Password != "" {
-	// 	logConfig.DB.Password = maskedString
-	// }
+	if logConfig.DB.Password != "" {
+		logConfig.DB.Password = maskedString
+	}
 
-	// if logConfig.Migrator.Password != "" {
-	// 	logConfig.Migrator.Password = maskedString
-	// }
+	if logConfig.Migrator.Password != "" {
+		logConfig.Migrator.Password = maskedString
+	}
 
-	// if logConfig.JwtSecretKey != "" {
-	// 	logConfig.JwtSecretKey = maskedString
-	// }
+	if logConfig.JwtSecretKey != "" {
+		logConfig.JwtSecretKey = maskedString
+	}
 
-	// if logConfig.Minio.AccessKey != "" {
-	// 	logConfig.Minio.AccessKey = maskedString
-	// }
+	if logConfig.S3.AccessKey != "" {
+		logConfig.S3.AccessKey = maskedString
+	}
 
-	// if logConfig.Minio.SecretKey != "" {
-	// 	logConfig.Minio.SecretKey = maskedString
-	// }
+	if logConfig.S3.SecretKey != "" {
+		logConfig.S3.SecretKey = maskedString
+	}
 
 	// Convert to JSON with indents for readability
 	jsonBytes, err := json.MarshalIndent(logConfig, "", "  ")

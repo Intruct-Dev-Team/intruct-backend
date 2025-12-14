@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest/handlers"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest/httputils"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest/middlewares"
 	"github.com/go-chi/chi/v5"
@@ -22,11 +23,11 @@ const (
 )
 
 type Services interface {
-	// handlers.Services
+	handlers.Services
 
 	// middlewares.SessionValidator
-	// middlewares.UserService    // for auth
-	// middlewares.TokenValidator // for auth
+	middlewares.UserService    // for auth
+	middlewares.TokenValidator // for auth
 }
 
 type Config struct {
@@ -44,16 +45,12 @@ func NewServer(services Services, config Config, log *zap.Logger) *Server {
 	router.Use(middlewares.LoggerMiddleware(log.Named("log_middleware")))
 	router.Use(middlewares.CorsMiddleware)
 
-	// // creating auth middlewares
-	// var sessionValidator middlewares.SessionValidator = services
-	// var userService middlewares.UserService = services
-	// AuthMiddlewares := middlewares.NewAuthMiddlewares(
-	// 	sessionValidator,
-	// 	userService,
-	// 	log,
-	// )
+	var tokenValidator middlewares.TokenValidator = services
+	var userService middlewares.UserService = services
+	jwtAuthMiddleware := middlewares.JWTAuthMiddleware(tokenValidator, log.Named("jwt_middleware"))
+	systemAuthMiddleware := middlewares.SystemAuthMiddleware(userService, log.Named("sys_auth_middlware"))
 
-	// handler := handlers.NewHandlers(services, log)
+	handler := handlers.New(services, log)
 
 	// root router
 	apiRouter := chi.NewRouter()
@@ -63,7 +60,7 @@ func NewServer(services Services, config Config, log *zap.Logger) *Server {
 	})
 
 	// all routes
-	// handler.SetupRoutes(apiRouter, AuthMiddlewares)
+	handler.SetupRoutes(apiRouter, jwtAuthMiddleware, systemAuthMiddleware)
 
 	router.Mount(apiRoute, apiRouter)
 

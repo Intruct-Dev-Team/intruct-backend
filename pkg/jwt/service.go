@@ -9,8 +9,9 @@ import (
 )
 
 const (
-	UserIDKey  = "user_id"
-	defaultTTL = time.Hour * 24 * 7
+	UserIDKey        = "user_id"
+	ExternalUserUUID = "sub"
+	defaultTTL       = time.Hour * 24 * 7
 )
 
 var ErrorTokenExpired = errors.New("token is expired")
@@ -102,18 +103,29 @@ func (s *JWTService) ValidateJWTToken(tokenString string) (jwt.MapClaims, error)
 	return claims, nil
 }
 
-// ExtractUserID extracts user ID from claims.
-func (s *JWTService) ExtractUserID(claims jwt.MapClaims) (int, error) {
-	userID, ok := claims[UserIDKey].(float64)
+func (s *JWTService) ExtractExternalUserUUID(claims jwt.MapClaims) (string, error) {
+	userUUID, ok := claims[ExternalUserUUID].(string)
 	if !ok {
-		return 0, errors.New("invalid or missing user ID in claims")
+		return "", errors.New("invalid or missing user ID in claims")
 	}
 
-	return int(userID), nil
+	return userUUID, nil
+}
+
+func (v *JWTService) ExtractEmail(claims jwt.MapClaims) (string, error) {
+	email, ok := claims["email"].(string)
+	if !ok || email == "" {
+		return "", errors.New("email not found in claims")
+	}
+	return email, nil
 }
 
 func (s *JWTService) GetUserKey() string {
 	return UserIDKey
+}
+
+func (s *JWTService) GetExternalUserUUIDKey() string {
+	return ExternalUserUUID
 }
 
 func (s *JWTService) GetExpiredError() error {

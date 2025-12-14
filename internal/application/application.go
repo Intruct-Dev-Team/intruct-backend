@@ -7,26 +7,16 @@ import (
 	"os"
 
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/config"
+	"github.com/Intruct-Dev-Team/intruct-backend/internal/repository"
+	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/user"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest"
+	"github.com/Intruct-Dev-Team/intruct-backend/pkg/jwt"
+	"github.com/Intruct-Dev-Team/intruct-backend/pkg/migrator"
+	"github.com/Intruct-Dev-Team/intruct-backend/pkg/storage/db/postgres"
+	"github.com/Intruct-Dev-Team/intruct-backend/pkg/storage/object/s3"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
-
-// import (
-// 	"context"
-// 	"errors"
-// 	"fmt"
-// 	"os"
-
-// 	"github.com/Intruct-Dev-Team/intruct-backend/pkg/jwt"
-// 	"github.com/Intruct-Dev-Team/intruct-backend/pkg/migrator"
-// 	"github.com/Intruct-Dev-Team/intruct-backend/pkg/storage/db/postgres"
-// 	"github.com/Intruct-Dev-Team/intruct-backend/pkg/storage/object/minio"
-// 	"github.com/LearnShareApp/learn-share-backend/pkg/livekit"
-// 	"github.com/jmoiron/sqlx"
-// 	"go.uber.org/zap"
-// 	"honnef.co/go/tools/config"
-// )
 
 type Application struct {
 	db     *sqlx.DB
@@ -34,92 +24,90 @@ type Application struct {
 	log    *zap.Logger
 }
 
-// type Services struct {
-// 	kratos.KratosService
-// 	jwt.JWTService
-// 	user.UserService
-// 	teacher.TeacherService
-// 	schedule.ScheduleService
-// 	review.ReviewService
-// 	lesson.LessonService
-// 	image.ImageService
-// 	category.CategoryService
-// 	skill.SkillService
-// 	complaint.ComplaintService
-// 	common.CommonService
-// }
+type Services struct {
+	user.UserService
+	jwt.JWTService
+	// 	kratos.KratosService
+	// 	teacher.TeacherService
+	// 	schedule.ScheduleService
+	// 	review.ReviewService
+	// 	lesson.LessonService
+	// 	image.ImageService
+	// 	category.CategoryService
+	// 	skill.SkillService
+	// 	complaint.ComplaintService
+	// 	common.CommonService
+}
 
-// func NewServices(
-// 	kratosService *kratos.KratosService,
-// 	jwtService *jwt.JWTService,
-// 	userService *user.UserService,
-// 	teacherService *teacher.TeacherService,
-// 	scheduleService *schedule.ScheduleService,
-// 	reviewService *review.ReviewService,
-// 	lessonService *lesson.LessonService,
-// 	imageService *image.ImageService,
-// 	categoryService *category.CategoryService,
-// 	skillService *skill.SkillService,
-// 	complaintService *complaint.ComplaintService,
-// 	commonService *common.CommonService,
-// ) *Services {
-// 	return &Services{
-// 		KratosService:    *kratosService,
-// 		JWTService:       *jwtService,
-// 		UserService:      *userService,
-// 		TeacherService:   *teacherService,
-// 		ScheduleService:  *scheduleService,
-// 		ReviewService:    *reviewService,
-// 		LessonService:    *lessonService,
-// 		ImageService:     *imageService,
-// 		CategoryService:  *categoryService,
-// 		SkillService:     *skillService,
-// 		ComplaintService: *complaintService,
-// 		CommonService:    *commonService,
-// 	}
-// }
+func NewServices(
+	userService *user.UserService,
+	jwtService *jwt.JWTService,
+	// kratosService *kratos.KratosService,
+	// teacherService *teacher.TeacherService,
+	// scheduleService *schedule.ScheduleService,
+	// reviewService *review.ReviewService,
+	// lessonService *lesson.LessonService,
+	// imageService *image.ImageService,
+	// categoryService *category.CategoryService,
+	// skillService *skill.SkillService,
+	// complaintService *complaint.ComplaintService,
+	// commonService *common.CommonService,
+) *Services {
+	return &Services{
+		UserService: *userService,
+		JWTService:  *jwtService,
+		// 		KratosService:    *kratosService,
+		// 		TeacherService:   *teacherService,
+		// 		ScheduleService:  *scheduleService,
+		// 		ReviewService:    *reviewService,
+		// 		LessonService:    *lessonService,
+		// 		ImageService:     *imageService,
+		// 		CategoryService:  *categoryService,
+		// 		SkillService:     *skillService,
+		// 		ComplaintService: *complaintService,
+		// 		CommonService:    *commonService,
+	}
+}
 
 func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Application, error) {
+	var err error
+
 	// database connection
-	// database, err := postgres.New(ctx, &config.DB)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed to connect to postgres: %w", err)
-	// }
+	database, err := postgres.New(ctx, &config.DB)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to postgres: %w", err)
+	}
 
-	// log.Info("connected to database successfully")
+	log.Info("connected to database successfully")
 
-	// minioClient, err := minio.NewClient(&config.Minio)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed to connect to minio: %w", err)
-	// }
+	s3Client, err := s3.NewClient(&config.S3)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to S3 object storage (supabase): %w", err)
+	}
 
-	// if err = minio.CreateBucket(ctx, minioClient, config.Minio.Bucket); err != nil {
-	// 	return nil, fmt.Errorf("failed to create minio bucket: %w", err)
-	// }
+	log.Info("connected to S3 object storage successfully")
 
-	// log.Info("connected to minio successfully")
+	repo := repository.New(database)
 
-	// repo := repository.New(database)
+	if config.IsInitDb {
+		err = migrator.RunMigrations(&config.Migrator)
+		if err != nil {
+			return nil, err
+		}
 
-	// if config.IsInitDb {
-	// 	err = migrator.RunMigrations(&config.Migrator)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-
-	// 	log.Info("up migrations successfully")
-	// }
+		log.Info("up migrations successfully")
+	}
 
 	/*----------------------------------------------------------*/
 
 	// services
 	// kratosService := kratos.New(config.Kratos)
-	// jwtService := jwt.NewService(config.JwtSecretKey, jwt.WithIssuer("learn-share-backend"))
+	jwtService := jwt.NewService(config.JwtSecretKey, jwt.WithIssuer("learn-share-backend"))
+	s3Service := s3.NewService(s3Client, config.S3.Bucket, config.S3.Host)
 	// liveKitService := livekit.NewService(config.LiveKit)
-	// minioService := minio.NewService(minioClient, config.Minio.Bucket)
 	// commonService := common.NewService(repo)
 
-	// userService := user.NewService(repo, minioService)
+	userService := user.NewService(repo, s3Service)
 	// teacherService := teacher.NewService(repo)
 	// scheduleService := schedule.NewService(repo)
 	// reviewService := review.NewService(repo)
@@ -129,10 +117,11 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 	// skillService := skill.NewService(repo)
 	// complaintService := complaint.NewService(repo)
 
-	// services := NewServices(
+	services := NewServices(
+		userService,
+		jwtService,
 	// 	kratosService,
 	// 	jwtService,
-	// 	userService,
 	// 	teacherService,
 	// 	scheduleService,
 	// 	reviewService,
@@ -142,12 +131,12 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 	// 	skillService,
 	// 	complaintService,
 	// 	commonService,
-	// )
+	)
 
-	restServer := rest.NewServer(struct{}{}, config.Server, log)
+	restServer := rest.NewServer(services, config.Server, log)
 
 	return &Application{
-		// db:     database,
+		db:     database,
 		server: restServer,
 		log:    log,
 	}, nil

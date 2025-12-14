@@ -15,13 +15,15 @@ type Config struct {
 	DBName   string `env:"POSTGRES_DB"       env-required:"true"`
 	User     string `env:"POSTGRES_USER"     env-required:"true"`
 	Password string `env:"POSTGRES_PASSWORD" env-required:"true"`
+	SSLMode  string `env:"POSTGRES_SSLMODE"  env-default:"disable"`
 }
 
 func New(ctx context.Context, config *Config) (*sqlx.DB, error) {
-	dsn := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable host=%s port=%d",
+	dsn := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=%s host=%s port=%d",
 		config.User,
 		config.Password,
 		config.DBName,
+		config.SSLMode,
 		config.Host,
 		config.Port,
 	)

@@ -25,7 +25,7 @@ func RunMigrations(cfg *Config) error {
 		cfg.UserName, cfg.Password, cfg.Host, cfg.Port, cfg.DBName, cfg.SSLMode)
 
 	migrations, err := migrate.New(
-		fmt.Sprintf("file://%s", cfg.MigrationsPath), //nolint:perfsprint    // path to migrations files
+		fmt.Sprintf("file://%s", cfg.MigrationsPath), // path to migrations files
 		dsn, // connection string to DB
 	)
 	if err != nil {

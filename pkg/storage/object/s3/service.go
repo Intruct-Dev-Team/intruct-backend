@@ -1,9 +1,8 @@
-package minio
+package s3
 
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"path/filepath"
 	"strings"
 	"time"
@@ -13,23 +12,24 @@ import (
 )
 
 type Service struct {
-	client  *minio.Client
-	bucket  string
-	address string
-	useSSL  bool
+	client *minio.Client
+	bucket string
+	host   string
 }
 
-func NewService(client *minio.Client, bucket, address string, useSSL bool) *Service {
+func NewService(client *minio.Client, bucket, host string) *Service {
 	return &Service{
-		client:  client,
-		bucket:  bucket,
-		address: address,
-		useSSL:  useSSL,
+		client: client,
+		bucket: bucket,
+		host:   host,
 	}
 }
 
 func (s *Service) UploadFile(ctx context.Context, file *object.File) error {
-	_, err := s.client.PutObject(ctx, s.bucket, file.Name, file.FileReader, file.Size, minio.PutObjectOptions{})
+	_, err := s.client.PutObject(ctx, s.bucket, file.Name, file.FileReader, file.Size,
+		minio.PutObjectOptions{
+			ContentType: "application/octet-stream", // optional
+		})
 	if err != nil {
 		return fmt.Errorf("failed to upload file: %w", err)
 	}
@@ -70,13 +70,18 @@ func (s *Service) IsFileExists(ctx context.Context, fileName string) (bool, erro
 }
 
 func (s *Service) GetPresignedURL(ctx context.Context, fileName string, expiry time.Duration) (string, error) {
-	reqParams := make(url.Values)
-	presignedURL, err := s.client.PresignedGetObject(ctx, s.bucket, fileName, expiry, reqParams)
+	url, err := s.client.PresignedGetObject(ctx, s.bucket, fileName, expiry, nil)
 	if err != nil {
 		return "", fmt.Errorf("failed to generate presigned URL: %w", err)
 	}
+	return url.String(), nil
+}
 
-	return presignedURL.String(), nil
+// for public buckets
+func (s *Service) GetPublicURL(fileName string) string {
+	// Supabase format
+	return fmt.Sprintf("https://%s/storage/v1/object/public/%s/%s",
+		s.host, s.bucket, fileName)
 }
 
 func (s *Service) DeleteFile(ctx context.Context, fileName string) error {
@@ -84,15 +89,5 @@ func (s *Service) DeleteFile(ctx context.Context, fileName string) error {
 	if err != nil {
 		return fmt.Errorf("failed to delete file: %w", err)
 	}
-
 	return nil
-}
-
-func (s *Service) GetPublicURL(fileName string) string {
-	scheme := "http"
-	if s.useSSL {
-		scheme = "https"
-	}
-
-	return fmt.Sprintf("%s://%s/%s/%s", scheme, s.address, s.bucket, fileName)
 }
