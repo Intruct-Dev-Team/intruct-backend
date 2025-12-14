@@ -11,7 +11,8 @@ import (
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest/middlewares"
 	"github.com/go-chi/chi/v5"
 
-	// httpSwagger "github.com/swaggo/http-swagger"
+	_ "github.com/Intruct-Dev-Team/intruct-backend/_docs/swagger"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"go.uber.org/zap"
 )
 
@@ -65,9 +66,9 @@ func NewServer(services Services, config Config, log *zap.Logger) *Server {
 	router.Mount(apiRoute, apiRouter)
 
 	// add swagger endpoint
-	// router.Get("/swagger/*", httpSwagger.Handler(
-	// 	httpSwagger.URL("./swagger/doc.json"), // URL to JSON docs file
-	// ))
+	router.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("/swagger/doc.json"), // URL to JSON docs file
+	))
 
 	return &Server{
 		server: &http.Server{

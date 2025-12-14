@@ -1,0 +1,121 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "back-end part for mobile application.",
+        "title": "Intruct API",
+        "contact": {
+            "name": "Ruslan's Support",
+            "url": "https://t.me/Ruslan20007",
+            "email": "ruslanrbb8@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api",
+    "paths": {
+        "/auth/complete-registration": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Complete registration by providing additional profile information\nPrerequisites: User must be authenticated via External service (Supabase Auth)\nThis endpoint creates user profile in application database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Complete registration",
+                "parameters": [
+                    {
+                        "description": "Profile Data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.completeRegistrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid request or validation failed",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "401": {
+                        "description": "External auth is missing or invalid",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "409": {
+                        "description": "User already completed registration",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "httputils.ErrorStruct": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.completeRegistrationRequest": {
+            "description": "completeRegistrationRequest to complete user registration.",
+            "type": "object",
+            "required": [
+                "birthdate",
+                "name",
+                "surname"
+            ],
+            "properties": {
+                "avatar": {
+                    "type": "string",
+                    "example": "base64 encoded image"
+                },
+                "birthdate": {
+                    "type": "string",
+                    "example": "2000-01-01T00:00:00Z"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John"
+                },
+                "surname": {
+                    "type": "string",
+                    "example": "Smith"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

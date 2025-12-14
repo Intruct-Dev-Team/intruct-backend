@@ -1,0 +1,84 @@
+basePath: /api
+definitions:
+  httputils.ErrorStruct:
+    properties:
+      error:
+        type: string
+    type: object
+  user.completeRegistrationRequest:
+    description: completeRegistrationRequest to complete user registration.
+    properties:
+      avatar:
+        example: base64 encoded image
+        type: string
+      birthdate:
+        example: "2000-01-01T00:00:00Z"
+        type: string
+      name:
+        example: John
+        type: string
+      surname:
+        example: Smith
+        type: string
+    required:
+    - birthdate
+    - name
+    - surname
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: ruslanrbb8@gmail.com
+    name: Ruslan's Support
+    url: https://t.me/Ruslan20007
+  description: back-end part for mobile application.
+  title: Intruct API
+  version: "1.0"
+paths:
+  /auth/complete-registration:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Complete registration by providing additional profile information
+        Prerequisites: User must be authenticated via External service (Supabase Auth)
+        This endpoint creates user profile in application database
+      parameters:
+      - description: Profile Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.completeRegistrationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Invalid request or validation failed
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "401":
+          description: External auth is missing or invalid
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "409":
+          description: User already completed registration
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      security:
+      - BearerAuth: []
+      summary: Complete registration
+      tags:
+      - auth
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

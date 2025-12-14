@@ -26,7 +26,7 @@ const CompliteRegistrationRoute = "/complete-registration"
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Security     Authorization
+// @Security     BearerAuth
 // @Param        request body completeRegistrationRequest true "Profile Data"
 // @Success      201
 // @Failure      400 {object} httputils.ErrorStruct "Invalid request or validation failed"
