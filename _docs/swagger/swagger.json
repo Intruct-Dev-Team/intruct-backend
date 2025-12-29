@@ -72,6 +72,84 @@
                     }
                 }
             }
+        },
+        "/user/profile": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get info about user by jwt token (in Authorization enter: Bearer \u003cyour_jwt_token\u003e)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user profile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user.getUserResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}/profile": {
+            "get": {
+                "description": "Get info about user by user id in route (/api/users/{id}/profile)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user profile",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user.getUserResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -103,6 +181,43 @@
                 "name": {
                     "type": "string",
                     "example": "John"
+                },
+                "surname": {
+                    "type": "string",
+                    "example": "Smith"
+                }
+            }
+        },
+        "user.getUserResponse": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string",
+                    "example": "uuid.png"
+                },
+                "birthdate": {
+                    "type": "string",
+                    "example": "2002-09-09T10:10:10+09:00"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "qwerty@example.com"
+                },
+                "external_uuid": {
+                    "type": "string",
+                    "example": "uuid"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John"
+                },
+                "registration_date": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10+09:00"
                 },
                 "surname": {
                     "type": "string",

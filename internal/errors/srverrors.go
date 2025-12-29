@@ -5,7 +5,8 @@ import "errors"
 var (
 	ErrorUserExists = errors.New("user already exists")
 
-// ErrorUserNotFound     = errors.New("user not found")
+	ErrorUserNotFound = errors.New("user not found")
+
 // ErrorUserIsNotTeacher = errors.New("user is not a teacher")
 
 // ErrorTeacherExists   = errors.New("teacher already exists")

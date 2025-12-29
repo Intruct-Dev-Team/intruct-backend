@@ -15,8 +15,8 @@ type Repository interface {
 	GetUserIDByExternalUUID(ctx context.Context, ExternalUUID string) (int, error)
 	IsUserExistsByEmail(ctx context.Context, email string) (bool, error)
 	CreateUser(ctx context.Context, user *entities.User) (int, error)
+	GetUserByID(ctx context.Context, id int) (*entities.User, error)
 	// IsTeacherExistsByUserID(ctx context.Context, id int) (bool, error)
-	// GetUserByID(ctx context.Context, id int) (*entities.User, error)
 	// GetUserByEmail(ctx context.Context, email string) (*entities.User, error)
 	// GetUserStatByUserID(ctx context.Context, id int) (*entities.StudentStatistic, error)
 	// UpdateUser(ctx context.Context, userID int, user *entities.User) error

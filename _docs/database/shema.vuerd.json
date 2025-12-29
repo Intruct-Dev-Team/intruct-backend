@@ -1,11 +1,11 @@
 {
   "canvas": {
     "version": "2.2.11",
-    "width": 2000,
-    "height": 2000,
-    "scrollTop": -304.00000000000057,
-    "scrollLeft": -359.9999999999999,
-    "zoomLevel": 0.8,
+    "width": 3000,
+    "height": 3000,
+    "scrollTop": -192.6031249999997,
+    "scrollLeft": -730.4000000000002,
+    "zoomLevel": 1,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -48,8 +48,8 @@
         "columns": [
           {
             "name": "user_id",
-            "comment": "INT",
-            "dataType": "SERIAL",
+            "comment": "",
+            "dataType": "INTEGER",
             "default": "",
             "option": {
               "autoIncrement": false,
@@ -233,14 +233,754 @@
         ],
         "ui": {
           "active": false,
-          "left": 396,
-          "top": 264.8,
-          "zIndex": 3,
+          "left": 1077.1476,
+          "top": 296.3237,
+          "zIndex": 139,
           "widthName": 60,
           "widthComment": 60
         },
         "visible": true,
         "id": "72f34e13-0a1a-4a28-b296-c93aac208542"
+      },
+      {
+        "name": "courses",
+        "comment": "",
+        "columns": [
+          {
+            "name": "course_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": true,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": true,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "47bff577-aa8d-4b25-ae18-56a14ac1b988"
+          },
+          {
+            "name": "owner_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "5ac6029a-0817-4b42-b126-39b1cd1d67c5"
+          },
+          {
+            "name": "title",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "3be1e7b6-4222-4c76-9b6c-27a11f868974"
+          },
+          {
+            "name": "description",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": false
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 64.8671875,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "7204c716-8fdf-496a-9f95-2821c0cdb10e"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 1006.0011,
+          "top": 629.2676,
+          "zIndex": 138,
+          "widthName": 60,
+          "widthComment": 60
+        },
+        "visible": true,
+        "id": "17b3c2de-b9f3-4673-9d80-c5a3134bd503"
+      },
+      {
+        "name": "modules",
+        "comment": "",
+        "columns": [
+          {
+            "name": "module_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": true,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": true,
+              "fk": false,
+              "pfk": false,
+              "widthName": 61.9853515625,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "f8ea3f84-8f19-46ec-82bc-89a49f7f33c5"
+          },
+          {
+            "name": "course_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "1f9c30ce-e565-44ba-aebd-d7494ac486bc"
+          },
+          {
+            "name": "serial_number",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 84.37353515625,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "595b6855-2cf6-4963-bf2f-f2cc7618a1df"
+          },
+          {
+            "name": "title",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "7a25468d-6243-4e5e-afca-eda2a84b8078"
+          },
+          {
+            "name": "description",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": false
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 64.8671875,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "7a1bd972-ff6f-4756-a472-c09ac6d96b11"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 535.3555,
+          "top": 738.9338,
+          "zIndex": 145,
+          "widthName": 60,
+          "widthComment": 60
+        },
+        "visible": true,
+        "id": "18aa963d-7b7f-4a79-b321-540c70e41341"
+      },
+      {
+        "name": "lessons",
+        "comment": "",
+        "columns": [
+          {
+            "name": "lesson_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": true,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": true,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "4e6b2995-f1a3-4d8a-a697-909a65d0538b"
+          },
+          {
+            "name": "course_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "077b612a-07c6-4928-affc-6cd3a36b3eb9"
+          },
+          {
+            "name": "module_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 61.9853515625,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "bd7e926e-0d8b-4dde-81a1-8077d048b7ad"
+          },
+          {
+            "name": "serial_number",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 84.37353515625,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "82e9498c-b46c-4d61-b43f-bc0f926b6f27"
+          },
+          {
+            "name": "title",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "90d714ec-ce74-4591-9d43-0b21d8a3baac"
+          },
+          {
+            "name": "description",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": false
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 64.8671875,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "f34278ab-2ba4-4fb0-b0c0-882a9cd8157d"
+          },
+          {
+            "name": "content_filename",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 101.0107421875,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "a006a6cb-8121-4541-bc86-4dba84f32af3"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 889.9351,
+          "top": 1012.6888,
+          "zIndex": 141,
+          "widthName": 60,
+          "widthComment": 60
+        },
+        "visible": true,
+        "id": "16e1d08e-dd44-4d72-b5e4-ff47402ac26c"
+      },
+      {
+        "name": "practices",
+        "comment": "",
+        "columns": [
+          {
+            "name": "practice_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": true,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": true,
+              "fk": false,
+              "pfk": false,
+              "widthName": 64.8671875,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "86bb97d2-d877-49e3-8bdc-616d83e64ee1"
+          },
+          {
+            "name": "lesson_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "1efc4322-93fb-438f-ba55-f06dd88280c4"
+          },
+          {
+            "name": "serial_number",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 84.37353515625,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "0f4ea92f-a6aa-49c3-b89a-760d3809cc42"
+          },
+          {
+            "name": "content",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "e2313d3a-1125-4250-8553-55c68d3abdd9"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 352.716,
+          "top": 1040.9374,
+          "zIndex": 135,
+          "widthName": 60,
+          "widthComment": 60
+        },
+        "visible": true,
+        "id": "cac7f389-fc89-48ee-b179-99007c636b59"
+      },
+      {
+        "name": "practices_options",
+        "comment": "",
+        "columns": [
+          {
+            "name": "option_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": true,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": true,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "c61a0ab0-8ac0-4e99-bcce-8ba774fc92a4"
+          },
+          {
+            "name": "practice_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 64.8671875,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "1db1ecb1-43e5-4882-8025-8d39a525d055"
+          },
+          {
+            "name": "content",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "0de7e556-be2c-439e-8ea2-2821e187b30c"
+          },
+          {
+            "name": "is_answer",
+            "comment": "",
+            "dataType": "BOOLEAN",
+            "default": "FALSE",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60.525390625,
+              "widthComment": 60,
+              "widthDataType": 64.8544921875,
+              "widthDefault": 60
+            },
+            "id": "871a25b5-e59e-4c10-8248-4e9bf3669c5a"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 363.7777,
+          "top": 1364.7373,
+          "zIndex": 109,
+          "widthName": 103.1689453125,
+          "widthComment": 60
+        },
+        "visible": true,
+        "id": "a093cea0-34f8-408c-a8e8-003b3b6bd24e"
+      },
+      {
+        "name": "users_courses_progresses",
+        "comment": "",
+        "columns": [
+          {
+            "name": "user_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "4de85b3e-38d6-4740-9a0b-b41767182471"
+          },
+          {
+            "name": "course_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "b0c1220a-008b-42a8-8b44-0555db5606ff"
+          },
+          {
+            "name": "current_lesson_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 104.6162109375,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "205164e8-fe74-46b6-859c-377fb05f61c3"
+          },
+          {
+            "name": "is_finished",
+            "comment": "",
+            "dataType": "BOOLEAN",
+            "default": "FALSE",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 63.42626953125,
+              "widthComment": 60,
+              "widthDataType": 64.8544921875,
+              "widthDefault": 60
+            },
+            "id": "daa6fcaa-cc97-4347-a556-c91b6e1258b4"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 1673.1559,
+          "top": 566.6486,
+          "zIndex": 144,
+          "widthName": 158.076171875,
+          "widthComment": 60
+        },
+        "visible": true,
+        "id": "2506c693-89b9-4b41-8568-9159a56db541"
       }
     ],
     "indexes": []
@@ -249,6 +989,241 @@
     "memos": []
   },
   "relationship": {
-    "relationships": []
+    "relationships": [
+      {
+        "identification": false,
+        "relationshipType": "OneN",
+        "startRelationshipType": "Dash",
+        "start": {
+          "tableId": "17b3c2de-b9f3-4673-9d80-c5a3134bd503",
+          "columnIds": [
+            "47bff577-aa8d-4b25-ae18-56a14ac1b988"
+          ],
+          "x": 1006.0011,
+          "y": 704.7676,
+          "direction": "left"
+        },
+        "end": {
+          "tableId": "18aa963d-7b7f-4a79-b321-540c70e41341",
+          "columnIds": [
+            "1f9c30ce-e565-44ba-aebd-d7494ac486bc"
+          ],
+          "x": 906.72903515625,
+          "y": 781.8088,
+          "direction": "right"
+        },
+        "constraintName": "fk_courses_to_modules",
+        "visible": true,
+        "id": "64750529-098c-4e48-82af-25e515fc0bf4"
+      },
+      {
+        "identification": false,
+        "relationshipType": "OneN",
+        "startRelationshipType": "Dash",
+        "start": {
+          "tableId": "18aa963d-7b7f-4a79-b321-540c70e41341",
+          "columnIds": [
+            "f8ea3f84-8f19-46ec-82bc-89a49f7f33c5"
+          ],
+          "x": 906.72903515625,
+          "y": 867.5588,
+          "direction": "right"
+        },
+        "end": {
+          "tableId": "16e1d08e-dd44-4d72-b5e4-ff47402ac26c",
+          "columnIds": [
+            "bd7e926e-0d8b-4dde-81a1-8077d048b7ad"
+          ],
+          "x": 986.937785546875,
+          "y": 1012.6888,
+          "direction": "top"
+        },
+        "constraintName": "fk_modules_to_lessons",
+        "visible": true,
+        "id": "b7e5958c-6d0e-4eb3-a4f5-dbc309c7db21"
+      },
+      {
+        "identification": false,
+        "relationshipType": "OneN",
+        "startRelationshipType": "Dash",
+        "start": {
+          "tableId": "72f34e13-0a1a-4a28-b296-c93aac208542",
+          "columnIds": [
+            "da2a7425-f2f6-4592-96b2-0facdaf83782"
+          ],
+          "x": 1278.502824609375,
+          "y": 529.3236999999999,
+          "direction": "bottom"
+        },
+        "end": {
+          "tableId": "17b3c2de-b9f3-4673-9d80-c5a3134bd503",
+          "columnIds": [
+            "5ac6029a-0817-4b42-b126-39b1cd1d67c5"
+          ],
+          "x": 1181.93469375,
+          "y": 629.2676,
+          "direction": "top"
+        },
+        "constraintName": "fk_users_to_courses",
+        "visible": true,
+        "id": "1a2257db-4d08-4ff0-8c8b-1b5589b6fc95"
+      },
+      {
+        "identification": false,
+        "relationshipType": "OneN",
+        "startRelationshipType": "Dash",
+        "start": {
+          "tableId": "17b3c2de-b9f3-4673-9d80-c5a3134bd503",
+          "columnIds": [
+            "47bff577-aa8d-4b25-ae18-56a14ac1b988"
+          ],
+          "x": 1181.93469375,
+          "y": 780.2676,
+          "direction": "bottom"
+        },
+        "end": {
+          "tableId": "16e1d08e-dd44-4d72-b5e4-ff47402ac26c",
+          "columnIds": [
+            "077b612a-07c6-4928-affc-6cd3a36b3eb9"
+          ],
+          "x": 1180.9431566406251,
+          "y": 1012.6888,
+          "direction": "top"
+        },
+        "constraintName": "fk_courses_to_lessons",
+        "visible": true,
+        "id": "b160d319-ab60-4d82-82be-81c8515a533b"
+      },
+      {
+        "identification": false,
+        "relationshipType": "OneN",
+        "startRelationshipType": "Dash",
+        "start": {
+          "tableId": "16e1d08e-dd44-4d72-b5e4-ff47402ac26c",
+          "columnIds": [
+            "4e6b2995-f1a3-4d8a-a697-909a65d0538b"
+          ],
+          "x": 889.9351,
+          "y": 1118.9388,
+          "direction": "left"
+        },
+        "end": {
+          "tableId": "cac7f389-fc89-48ee-b179-99007c636b59",
+          "columnIds": [
+            "1efc4322-93fb-438f-ba55-f06dd88280c4"
+          ],
+          "x": 724.08953515625,
+          "y": 1116.4374,
+          "direction": "right"
+        },
+        "constraintName": "fk_lessons_to_quizzes",
+        "visible": true,
+        "id": "984b7f76-0c59-4ff7-99b4-551757773494"
+      },
+      {
+        "identification": false,
+        "relationshipType": "OneN",
+        "startRelationshipType": "Dash",
+        "start": {
+          "tableId": "cac7f389-fc89-48ee-b179-99007c636b59",
+          "columnIds": [
+            "86bb97d2-d877-49e3-8bdc-616d83e64ee1"
+          ],
+          "x": 538.402767578125,
+          "y": 1191.9374,
+          "direction": "bottom"
+        },
+        "end": {
+          "tableId": "a093cea0-34f8-408c-a8e8-003b3b6bd24e",
+          "columnIds": [
+            "1db1ecb1-43e5-4882-8025-8d39a525d055"
+          ],
+          "x": 542.13853984375,
+          "y": 1364.7373,
+          "direction": "top"
+        },
+        "constraintName": "fk_practices_to_practices_options",
+        "visible": true,
+        "id": "86af88d6-979c-43d3-9f85-ea9c7812145b"
+      },
+      {
+        "identification": false,
+        "relationshipType": "OneN",
+        "startRelationshipType": "Dash",
+        "start": {
+          "tableId": "72f34e13-0a1a-4a28-b296-c93aac208542",
+          "columnIds": [
+            "da2a7425-f2f6-4592-96b2-0facdaf83782"
+          ],
+          "x": 1479.85804921875,
+          "y": 412.8237,
+          "direction": "right"
+        },
+        "end": {
+          "tableId": "2506c693-89b9-4b41-8568-9159a56db541",
+          "columnIds": [
+            "4de85b3e-38d6-4740-9a0b-b41767182471"
+          ],
+          "x": 1673.1559,
+          "y": 591.8152666666667,
+          "direction": "left"
+        },
+        "constraintName": "fk_users_to_users_courses_progresses",
+        "visible": true,
+        "id": "e83a73b5-63a8-434b-90f7-0117b9fe71c1"
+      },
+      {
+        "identification": false,
+        "relationshipType": "OneN",
+        "startRelationshipType": "Dash",
+        "start": {
+          "tableId": "17b3c2de-b9f3-4673-9d80-c5a3134bd503",
+          "columnIds": [
+            "47bff577-aa8d-4b25-ae18-56a14ac1b988"
+          ],
+          "x": 1357.8682875,
+          "y": 704.7676,
+          "direction": "right"
+        },
+        "end": {
+          "tableId": "2506c693-89b9-4b41-8568-9159a56db541",
+          "columnIds": [
+            "b0c1220a-008b-42a8-8b44-0555db5606ff"
+          ],
+          "x": 1673.1559,
+          "y": 642.1486000000001,
+          "direction": "left"
+        },
+        "constraintName": "fk_courses_to_users_courses_progresses",
+        "visible": true,
+        "id": "bacff7cb-5f76-4bae-8cef-08a0c27c38a7"
+      },
+      {
+        "identification": false,
+        "relationshipType": "OneN",
+        "startRelationshipType": "Dash",
+        "start": {
+          "tableId": "16e1d08e-dd44-4d72-b5e4-ff47402ac26c",
+          "columnIds": [
+            "4e6b2995-f1a3-4d8a-a697-909a65d0538b"
+          ],
+          "x": 1277.9458421875001,
+          "y": 1118.9388,
+          "direction": "right"
+        },
+        "end": {
+          "tableId": "2506c693-89b9-4b41-8568-9159a56db541",
+          "columnIds": [
+            "205164e8-fe74-46b6-859c-377fb05f61c3"
+          ],
+          "x": 1673.1559,
+          "y": 692.4819333333335,
+          "direction": "left"
+        },
+        "constraintName": "fk_lessons_to_users_courses_progresses",
+        "visible": true,
+        "id": "c3395bef-9604-494c-a4b3-96d21f94637f"
+      }
+    ]
   }
 }

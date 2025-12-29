@@ -62,7 +62,7 @@ func (h *UserHandlers) CompleteRegistration() http.HandlerFunc {
 
 		if exists {
 			h.log.Debug("user already completed registration",
-				zap.String("kratos_id", externalUserUUID),
+				zap.String("external_uuid", externalUserUUID),
 			)
 			httputils.RespondWith409(w, "Registration already completed", h.log)
 

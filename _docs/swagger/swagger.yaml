@@ -25,6 +25,33 @@ definitions:
     - name
     - surname
     type: object
+  user.getUserResponse:
+    properties:
+      avatar:
+        example: uuid.png
+        type: string
+      birthdate:
+        example: "2002-09-09T10:10:10+09:00"
+        type: string
+      email:
+        example: qwerty@example.com
+        type: string
+      external_uuid:
+        example: uuid
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: John
+        type: string
+      registration_date:
+        example: "2022-09-09T10:10:10+09:00"
+        type: string
+      surname:
+        example: Smith
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -76,6 +103,57 @@ paths:
       summary: Complete registration
       tags:
       - auth
+  /user/profile:
+    get:
+      description: 'Get info about user by jwt token (in Authorization enter: Bearer
+        <your_jwt_token>)'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.getUserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      security:
+      - BearerAuth: []
+      summary: Get user profile
+      tags:
+      - users
+  /users/{id}/profile:
+    get:
+      description: Get info about user by user id in route (/api/users/{id}/profile)
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.getUserResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      summary: Get user profile
+      tags:
+      - users
 securityDefinitions:
   BearerAuth:
     in: header

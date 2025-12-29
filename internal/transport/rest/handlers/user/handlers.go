@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"path"
 
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/entities"
 	"github.com/go-chi/chi/v5"
@@ -11,12 +12,15 @@ import (
 )
 
 const (
-	authRoute = "/auth"
+	authRoute  = "/auth"
+	userRoute  = "/user"
+	usersRoute = "/users"
 )
 
 type UserService interface {
 	CreateUser(ctx context.Context, user *entities.User, avatarReader io.Reader, avatarSize int64) (int, error)
 	TryGetUserIDByExternalUUID(ctx context.Context, ExternalUserUUID string) (id int, exists bool, err error)
+	GetUser(ctx context.Context, userID int) (*entities.User, error)
 }
 
 type UserHandlers struct {
@@ -42,13 +46,14 @@ func (h *UserHandlers) SetupUserRoutes(router *chi.Mux, jwtAuthMiddleware func(h
 
 	router.Mount(authRoute, authRouter)
 
-	// router.Get(path.Join(usersRoute, GetPublicRoute), h.GetUserPublic())
+	router.Get(path.Join(usersRoute, GetPublicRoute), h.GetUserPublic())
 
-	// router.Group(func(r chi.Router) {
-	// 	r.Use(authMiddleware)
+	router.Group(func(r chi.Router) {
+		r.Use(jwtAuthMiddleware)
+		r.Use(systemAuthMiddleware)
 
-	// 	r.Get(path.Join(userRoute, checkOnAdminRoute), h.CheckOnAdmin())
-	// 	r.Get(path.Join(userRoute, getProtectedRoute), h.GetUserProtected())
-	// 	r.Patch(path.Join(userRoute, editRoute), h.EditUser())
-	// })
+		r.Get(path.Join(userRoute, getProtectedRoute), h.GetUserProtected())
+		// r.Get(path.Join(userRoute, checkOnAdminRoute), h.CheckOnAdmin())
+		// r.Patch(path.Join(userRoute, editRoute), h.EditUser())
+	})
 }

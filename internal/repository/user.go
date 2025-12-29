@@ -132,35 +132,36 @@ func (r *Repository) CreateUser(ctx context.Context, user *entities.User) (int, 
 // 	return &user, nil
 // }
 
-// func (r *Repository) GetUserByID(ctx context.Context, id int) (*entities.User, error) {
-// 	query, args, err := r.sqlBuilder.
-// 		Select(
-// 			"user_id",
-// 			"email",
-// 			"name",
-// 			"surname",
-// 			"registration_date",
-// 			"birthdate",
-// 			"avatar",
-// 		).
-// 		From("public.users").
-// 		Where(squirrel.Eq{"user_id": id}).
-// 		ToSql()
-// 	if err != nil {
-// 		return nil, fmt.Errorf("failed to build query: %w", err)
-// 	}
+func (r *Repository) GetUserByID(ctx context.Context, id int) (*entities.User, error) {
+	query, args, err := r.sqlBuilder.
+		Select(
+			"user_id",
+			"external_uuid",
+			"email",
+			"name",
+			"surname",
+			"registration_date",
+			"birthdate",
+			"avatar",
+		).
+		From("public.users").
+		Where(squirrel.Eq{"user_id": id}).
+		ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
 
-// 	var user entities.User
-// 	err = r.db.GetContext(ctx, &user, query, args...)
-// 	if err != nil {
-// 		if errors.Is(err, sql.ErrNoRows) {
-// 			return nil, internalErrs.ErrorSelectEmpty
-// 		}
-// 		return nil, fmt.Errorf("failed to find user by id: %w", err)
-// 	}
+	var user entities.User
+	err = r.db.GetContext(ctx, &user, query, args...)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, internalErrs.ErrorSelectEmpty
+		}
+		return nil, fmt.Errorf("failed to find user by id: %w", err)
+	}
 
-// 	return &user, nil
-// }
+	return &user, nil
+}
 
 // func (r *Repository) GetUserStatByUserID(ctx context.Context, id int) (*entities.StudentStatistic, error) {
 // 	const query = `
