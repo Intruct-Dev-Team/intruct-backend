@@ -3,9 +3,9 @@
     "version": "2.2.11",
     "width": 3000,
     "height": 3000,
-    "scrollTop": -192.6031249999997,
-    "scrollLeft": -730.4000000000002,
-    "zoomLevel": 1,
+    "scrollTop": -471.80312499998644,
+    "scrollLeft": -1219.9999999999925,
+    "zoomLevel": 0.8,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -235,7 +235,7 @@
           "active": false,
           "left": 1077.1476,
           "top": 296.3237,
-          "zIndex": 139,
+          "zIndex": 4,
           "widthName": 60,
           "widthComment": 60
         },
@@ -343,7 +343,7 @@
           "active": false,
           "left": 1006.0011,
           "top": 629.2676,
-          "zIndex": 138,
+          "zIndex": 35,
           "widthName": 60,
           "widthComment": 60
         },
@@ -474,7 +474,7 @@
           "active": false,
           "left": 535.3555,
           "top": 738.9338,
-          "zIndex": 145,
+          "zIndex": 8,
           "widthName": 60,
           "widthComment": 60
         },
@@ -624,7 +624,7 @@
             "id": "f34278ab-2ba4-4fb0-b0c0-882a9cd8157d"
           },
           {
-            "name": "content_filename",
+            "name": "content",
             "comment": "",
             "dataType": "TEXT",
             "default": "",
@@ -639,7 +639,7 @@
               "pk": false,
               "fk": false,
               "pfk": false,
-              "widthName": 101.0107421875,
+              "widthName": 60,
               "widthComment": 60,
               "widthDataType": 60,
               "widthDefault": 60
@@ -651,7 +651,7 @@
           "active": false,
           "left": 889.9351,
           "top": 1012.6888,
-          "zIndex": 141,
+          "zIndex": 10,
           "widthName": 60,
           "widthComment": 60
         },
@@ -659,11 +659,11 @@
         "id": "16e1d08e-dd44-4d72-b5e4-ff47402ac26c"
       },
       {
-        "name": "practices",
+        "name": "quizes",
         "comment": "",
         "columns": [
           {
-            "name": "practice_id",
+            "name": "quiz_id",
             "comment": "",
             "dataType": "INTEGER",
             "default": "",
@@ -678,7 +678,7 @@
               "pk": true,
               "fk": false,
               "pfk": false,
-              "widthName": 64.8671875,
+              "widthName": 60,
               "widthComment": 60,
               "widthDataType": 60,
               "widthDefault": 60
@@ -732,7 +732,7 @@
             "id": "0f4ea92f-a6aa-49c3-b89a-760d3809cc42"
           },
           {
-            "name": "content",
+            "name": "question",
             "comment": "",
             "dataType": "TEXT",
             "default": "",
@@ -759,7 +759,7 @@
           "active": false,
           "left": 352.716,
           "top": 1040.9374,
-          "zIndex": 135,
+          "zIndex": 31,
           "widthName": 60,
           "widthComment": 60
         },
@@ -767,7 +767,7 @@
         "id": "cac7f389-fc89-48ee-b179-99007c636b59"
       },
       {
-        "name": "practices_options",
+        "name": "quizes_options",
         "comment": "",
         "columns": [
           {
@@ -794,7 +794,7 @@
             "id": "c61a0ab0-8ac0-4e99-bcce-8ba774fc92a4"
           },
           {
-            "name": "practice_id",
+            "name": "quiz_id",
             "comment": "",
             "dataType": "INTEGER",
             "default": "",
@@ -809,7 +809,7 @@
               "pk": false,
               "fk": true,
               "pfk": false,
-              "widthName": 64.8671875,
+              "widthName": 60,
               "widthComment": 60,
               "widthDataType": 60,
               "widthDefault": 60
@@ -867,8 +867,8 @@
           "active": false,
           "left": 363.7777,
           "top": 1364.7373,
-          "zIndex": 109,
-          "widthName": 103.1689453125,
+          "zIndex": 29,
+          "widthName": 88.72802734375,
           "widthComment": 60
         },
         "visible": true,
@@ -973,9 +973,9 @@
         ],
         "ui": {
           "active": false,
-          "left": 1673.1559,
-          "top": 566.6486,
-          "zIndex": 144,
+          "left": 1661.1556,
+          "top": 579.981,
+          "zIndex": 33,
           "widthName": 158.076171875,
           "widthComment": 60
         },
@@ -1034,7 +1034,7 @@
           "columnIds": [
             "bd7e926e-0d8b-4dde-81a1-8077d048b7ad"
           ],
-          "x": 986.937785546875,
+          "x": 982.7784837890625,
           "y": 1012.6888,
           "direction": "top"
         },
@@ -1086,7 +1086,7 @@
           "columnIds": [
             "077b612a-07c6-4928-affc-6cd3a36b3eb9"
           ],
-          "x": 1180.9431566406251,
+          "x": 1168.4652513671876,
           "y": 1012.6888,
           "direction": "top"
         },
@@ -1138,7 +1138,7 @@
           "columnIds": [
             "1db1ecb1-43e5-4882-8025-8d39a525d055"
           ],
-          "x": 542.13853984375,
+          "x": 539.96764140625,
           "y": 1364.7373,
           "direction": "top"
         },
@@ -1164,8 +1164,8 @@
           "columnIds": [
             "4de85b3e-38d6-4740-9a0b-b41767182471"
           ],
-          "x": 1673.1559,
-          "y": 591.8152666666667,
+          "x": 1661.1556,
+          "y": 605.1476666666667,
           "direction": "left"
         },
         "constraintName": "fk_users_to_users_courses_progresses",
@@ -1190,8 +1190,8 @@
           "columnIds": [
             "b0c1220a-008b-42a8-8b44-0555db5606ff"
           ],
-          "x": 1673.1559,
-          "y": 642.1486000000001,
+          "x": 1661.1556,
+          "y": 655.4810000000001,
           "direction": "left"
         },
         "constraintName": "fk_courses_to_users_courses_progresses",
@@ -1207,7 +1207,7 @@
           "columnIds": [
             "4e6b2995-f1a3-4d8a-a697-909a65d0538b"
           ],
-          "x": 1277.9458421875001,
+          "x": 1261.3086351562501,
           "y": 1118.9388,
           "direction": "right"
         },
@@ -1216,8 +1216,8 @@
           "columnIds": [
             "205164e8-fe74-46b6-859c-377fb05f61c3"
           ],
-          "x": 1673.1559,
-          "y": 692.4819333333335,
+          "x": 1661.1556,
+          "y": 705.8143333333335,
           "direction": "left"
         },
         "constraintName": "fk_lessons_to_users_courses_progresses",

@@ -1,5 +1,12 @@
 basePath: /api
 definitions:
+  course.createCourseResponse:
+    description: createCourseResponse returns created course ID
+    properties:
+      course_id:
+        example: 1
+        type: integer
+    type: object
   httputils.ErrorStruct:
     properties:
       error:
@@ -103,6 +110,58 @@ paths:
       summary: Complete registration
       tags:
       - auth
+  /course:
+    post:
+      consumes:
+      - multipart/form-data
+      description: |-
+        Create a new course with title, description, file and language
+        Prerequisites: User must be authenticated
+      parameters:
+      - description: Course title
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Course description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Course file
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: Course language
+        in: formData
+        name: language
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/course.createCourseResponse'
+        "400":
+          description: Invalid request or validation failed
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "401":
+          description: Authentication required
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      security:
+      - BearerAuth: []
+      summary: Create course
+      tags:
+      - course
   /user/profile:
     get:
       description: 'Get info about user by jwt token (in Authorization enter: Bearer

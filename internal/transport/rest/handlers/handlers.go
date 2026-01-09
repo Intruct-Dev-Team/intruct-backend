@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest/handlers/course"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest/handlers/user"
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/zap"
@@ -10,6 +11,7 @@ import (
 
 type Services interface {
 	user.UserService
+	course.CourseService
 }
 
 type Handlers struct {
@@ -32,6 +34,10 @@ func (h *Handlers) SetupRoutes(router *chi.Mux,
 	var userService user.UserService = h.services
 	userHandlers := user.NewUserHandlers(userService, h.log)
 	userHandlers.SetupUserRoutes(router, jwtAuthMiddleware, systemAuthMiddleware)
+
+	var courseService course.CourseService = h.services
+	courseHandlers := course.NewCourseHandlers(courseService, h.log)
+	courseHandlers.SetupCourseRoutes(router, jwtAuthMiddleware, systemAuthMiddleware)
 
 	// var teacherService teacher.TeacherService = h.services
 	// teacherHandlers := teacher.NewTeacherHandlers(teacherService, h.log)

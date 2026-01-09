@@ -1,0 +1,19 @@
+package entities
+
+import "time"
+
+type Course struct {
+	ID                 int       `db:"course_id"`
+	OwnerID            int       `db:"owner_id"`
+	Title              string    `db:"title"`
+	Description        string    `db:"description"`
+	LanguageID         int       `db:"language_id"`
+	StateMachineItemID int       `db:"state_machine_item_id"`
+	CreatedAt          time.Time `db:"created_at"`
+	UpdatedAt          time.Time `db:"updated_at"`
+
+	// Modules
+	Language         string            `db:"-"`
+	StateMachineName StateMachineName  `db:"-"`
+	StateMachineItem *StateMachineItem `db:"-"`
+}

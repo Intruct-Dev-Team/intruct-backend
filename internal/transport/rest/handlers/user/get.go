@@ -72,7 +72,7 @@ func (h *UserHandlers) GetUserProtected() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userID, ok := r.Context().Value(contextKeys.UserIDKey).(int)
 		if !ok || userID == 0 {
-			h.log.Debug("missing user ID in context")
+			h.log.Debug("user id not found in context")
 			httputils.RespondWith401(w, "authentication required", h.log)
 
 			return

@@ -7,6 +7,9 @@ var (
 
 	ErrorUserNotFound = errors.New("user not found")
 
+	ErrorLanguageNotFound = errors.New("language not found")
+	ErrorCourseExists     = errors.New("course already exists")
+
 // ErrorUserIsNotTeacher = errors.New("user is not a teacher")
 
 // ErrorTeacherExists   = errors.New("teacher already exists")

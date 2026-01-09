@@ -8,6 +8,7 @@ import (
 
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/config"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/repository"
+	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/course"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/user"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest"
 	"github.com/Intruct-Dev-Team/intruct-backend/pkg/jwt"
@@ -25,8 +26,9 @@ type Application struct {
 }
 
 type Services struct {
-	user.UserService
 	jwt.JWTService
+	user.UserService
+	course.CourseService
 	// 	kratos.KratosService
 	// 	teacher.TeacherService
 	// 	schedule.ScheduleService
@@ -40,8 +42,9 @@ type Services struct {
 }
 
 func NewServices(
-	userService *user.UserService,
 	jwtService *jwt.JWTService,
+	userService *user.UserService,
+	courseService *course.CourseService,
 	// kratosService *kratos.KratosService,
 	// teacherService *teacher.TeacherService,
 	// scheduleService *schedule.ScheduleService,
@@ -54,8 +57,9 @@ func NewServices(
 	// commonService *common.CommonService,
 ) *Services {
 	return &Services{
-		UserService: *userService,
-		JWTService:  *jwtService,
+		JWTService:    *jwtService,
+		UserService:   *userService,
+		CourseService: *courseService,
 		// 		KratosService:    *kratosService,
 		// 		TeacherService:   *teacherService,
 		// 		ScheduleService:  *scheduleService,
@@ -108,6 +112,7 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 	// commonService := common.NewService(repo)
 
 	userService := user.NewService(repo, s3Service)
+	courseService := course.NewService(repo)
 	// teacherService := teacher.NewService(repo)
 	// scheduleService := schedule.NewService(repo)
 	// reviewService := review.NewService(repo)
@@ -118,8 +123,9 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 	// complaintService := complaint.NewService(repo)
 
 	services := NewServices(
-		userService,
 		jwtService,
+		userService,
+		courseService,
 	// 	kratosService,
 	// 	jwtService,
 	// 	teacherService,
@@ -169,9 +175,9 @@ func (app *Application) Shutdown(ctx context.Context) error {
 		return err
 	}
 
-	// if err := app.db.Close(); err != nil {
-	// 	app.log.Error("failed to close database", zap.Error(err))
-	// }
+	if err := app.db.Close(); err != nil {
+		app.log.Error("failed to close database", zap.Error(err))
+	}
 
 	return nil
 }

@@ -63,6 +63,30 @@ func (r *Repository) IsUserExistsByEmail(ctx context.Context, email string) (boo
 	return exists, nil
 }
 
+func (r *Repository) IsUserExistsByID(ctx context.Context, id int) (bool, error) {
+	query, args, err := r.sqlBuilder.
+		Select("1").
+		From("users").
+		Where(squirrel.Eq{
+			"user_id": id,
+		}).
+		Prefix("SELECT EXISTS(").
+		Suffix(")").
+		ToSql()
+
+	if err != nil {
+		return false, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	var exists bool
+	err = r.db.GetContext(ctx, &exists, query, args...)
+	if err != nil {
+		return false, fmt.Errorf("failed to check user existence by email: %w", err)
+	}
+
+	return exists, nil
+}
+
 func (r *Repository) CreateUser(ctx context.Context, user *entities.User) (int, error) {
 	query, args, err := r.sqlBuilder.
 		Insert("users").
