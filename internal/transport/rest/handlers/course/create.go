@@ -22,7 +22,7 @@ const CreateCourseRoute = ""
 // @Produce      json
 // @Security     BearerAuth
 // @Param        title       formData string true  "Course title"
-// @Param        description formData string true  "Course description"
+// @Param        description formData string false  "Course description"
 // @Param        file        formData file   true  "Course file"
 // @Param        language    formData string true  "Course language"
 // @Success      201 {object} createCourseResponse
@@ -56,11 +56,6 @@ func (h *CourseHandlers) CreateCourse() http.HandlerFunc {
 		}
 
 		description := r.FormValue("description")
-		if description == "" {
-			httputils.RespondWith400(w, "description is required", h.log)
-
-			return
-		}
 
 		language := r.FormValue("language")
 		if language == "" {

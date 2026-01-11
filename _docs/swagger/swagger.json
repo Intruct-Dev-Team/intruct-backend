@@ -103,8 +103,7 @@
                         "type": "string",
                         "description": "Course description",
                         "name": "description",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "file",
@@ -136,6 +135,62 @@
                     },
                     "401": {
                         "description": "Authentication required",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{course_id}/upload": {
+            "patch": {
+                "description": "Upload processed course content with modules, lessons and quizzes from n8n workflow\nThis endpoint fills the course with educational content after file processing",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "Upload course content",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "course_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Course Content Data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/course.uploadCourseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Invalid request or validation failed",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "404": {
+                        "description": "Course not found",
                         "schema": {
                             "$ref": "#/definitions/httputils.ErrorStruct"
                         }
@@ -239,6 +294,128 @@
                 }
             }
         },
+        "course.uploadCourseRequest": {
+            "description": "uploadCourseRequest contains processed course content from n8n",
+            "type": "object",
+            "required": [
+                "course_title",
+                "language",
+                "last_updated",
+                "modules",
+                "total_lessons",
+                "total_modules"
+            ],
+            "properties": {
+                "course_title": {
+                    "type": "string",
+                    "example": "Introduction to Programming"
+                },
+                "language": {
+                    "type": "string",
+                    "example": "Russian"
+                },
+                "last_updated": {
+                    "type": "string",
+                    "example": "2026-01-06T16:57:59.272Z"
+                },
+                "modules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/course.uploadModuleRequest"
+                    }
+                },
+                "total_lessons": {
+                    "type": "integer",
+                    "example": 60
+                },
+                "total_modules": {
+                    "type": "integer",
+                    "example": 10
+                }
+            }
+        },
+        "course.uploadLessonRequest": {
+            "type": "object",
+            "required": [
+                "content",
+                "lesson_id",
+                "lesson_title"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "example": "..."
+                },
+                "lesson_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "lesson_title": {
+                    "type": "string",
+                    "example": "Lesson 1.1"
+                },
+                "quiz": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/course.uploadQuizRequest"
+                    }
+                }
+            }
+        },
+        "course.uploadModuleRequest": {
+            "type": "object",
+            "required": [
+                "lessons",
+                "module_id",
+                "module_title"
+            ],
+            "properties": {
+                "lessons": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/course.uploadLessonRequest"
+                    }
+                },
+                "module_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "module_title": {
+                    "type": "string",
+                    "example": "Module 1"
+                }
+            }
+        },
+        "course.uploadQuizRequest": {
+            "type": "object",
+            "required": [
+                "correct_index",
+                "options",
+                "question"
+            ],
+            "properties": {
+                "correct_index": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "1",
+                        "2",
+                        "3",
+                        "4"
+                    ]
+                },
+                "question": {
+                    "type": "string",
+                    "example": "What is 2+2?"
+                }
+            }
+        },
         "httputils.ErrorStruct": {
             "type": "object",
             "properties": {
@@ -285,6 +462,10 @@
                     "type": "string",
                     "example": "2002-09-09T10:10:10+09:00"
                 },
+                "completed_courses": {
+                    "type": "integer",
+                    "example": 1
+                },
                 "email": {
                     "type": "string",
                     "example": "qwerty@example.com"
@@ -294,6 +475,10 @@
                     "example": "uuid"
                 },
                 "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "in_progress_courses": {
                     "type": "integer",
                     "example": 1
                 },

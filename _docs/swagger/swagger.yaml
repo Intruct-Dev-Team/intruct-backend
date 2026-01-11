@@ -7,6 +7,95 @@ definitions:
         example: 1
         type: integer
     type: object
+  course.uploadCourseRequest:
+    description: uploadCourseRequest contains processed course content from n8n
+    properties:
+      course_title:
+        example: Introduction to Programming
+        type: string
+      language:
+        example: Russian
+        type: string
+      last_updated:
+        example: "2026-01-06T16:57:59.272Z"
+        type: string
+      modules:
+        items:
+          $ref: '#/definitions/course.uploadModuleRequest'
+        type: array
+      total_lessons:
+        example: 60
+        type: integer
+      total_modules:
+        example: 10
+        type: integer
+    required:
+    - course_title
+    - language
+    - last_updated
+    - modules
+    - total_lessons
+    - total_modules
+    type: object
+  course.uploadLessonRequest:
+    properties:
+      content:
+        example: '...'
+        type: string
+      lesson_id:
+        example: 1
+        type: integer
+      lesson_title:
+        example: Lesson 1.1
+        type: string
+      quiz:
+        items:
+          $ref: '#/definitions/course.uploadQuizRequest'
+        type: array
+    required:
+    - content
+    - lesson_id
+    - lesson_title
+    type: object
+  course.uploadModuleRequest:
+    properties:
+      lessons:
+        items:
+          $ref: '#/definitions/course.uploadLessonRequest'
+        type: array
+      module_id:
+        example: 1
+        type: integer
+      module_title:
+        example: Module 1
+        type: string
+    required:
+    - lessons
+    - module_id
+    - module_title
+    type: object
+  course.uploadQuizRequest:
+    properties:
+      correct_index:
+        example: 1
+        type: integer
+      options:
+        example:
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        items:
+          type: string
+        type: array
+      question:
+        example: What is 2+2?
+        type: string
+    required:
+    - correct_index
+    - options
+    - question
+    type: object
   httputils.ErrorStruct:
     properties:
       error:
@@ -40,6 +129,9 @@ definitions:
       birthdate:
         example: "2002-09-09T10:10:10+09:00"
         type: string
+      completed_courses:
+        example: 1
+        type: integer
       email:
         example: qwerty@example.com
         type: string
@@ -47,6 +139,9 @@ definitions:
         example: uuid
         type: string
       id:
+        example: 1
+        type: integer
+      in_progress_courses:
         example: 1
         type: integer
       name:
@@ -126,7 +221,6 @@ paths:
       - description: Course description
         in: formData
         name: description
-        required: true
         type: string
       - description: Course file
         in: formData
@@ -160,6 +254,45 @@ paths:
       security:
       - BearerAuth: []
       summary: Create course
+      tags:
+      - course
+  /courses/{course_id}/upload:
+    patch:
+      consumes:
+      - application/json
+      description: |-
+        Upload processed course content with modules, lessons and quizzes from n8n workflow
+        This endpoint fills the course with educational content after file processing
+      parameters:
+      - description: Course ID
+        in: path
+        name: course_id
+        required: true
+        type: integer
+      - description: Course Content Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/course.uploadCourseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request or validation failed
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      summary: Upload course content
       tags:
       - course
   /user/profile:

@@ -3,12 +3,16 @@ package errors
 import "errors"
 
 var (
+	ErrorUnavailableOperationState  = errors.New("unavailable operation for this state")
+	ErrorUnavailableStateTransition = errors.New("unavailable such state transition")
+
 	ErrorUserExists = errors.New("user already exists")
 
 	ErrorUserNotFound = errors.New("user not found")
 
 	ErrorLanguageNotFound = errors.New("language not found")
 	ErrorCourseExists     = errors.New("course already exists")
+	ErrorCourseNotFound   = errors.New("course not found")
 
 // ErrorUserIsNotTeacher = errors.New("user is not a teacher")
 
@@ -34,9 +38,6 @@ var (
 // ErrorNotRelatedUserToLesson    = errors.New("user no related to this lesson")
 // ErrorNotRelatedTeacherToLesson = errors.New("teacher no related to this lesson")
 // ErrorFinishedLessonNotFound    = errors.New("finished lesson not found")
-
-// ErrorUnavailableOperationState  = errors.New("unavailable operation for this state")
-// ErrorUnavailableStateTransition = errors.New("unavailable such state transition")
 
 // ErrorStatusNonVerification        = errors.New("non-verification status")
 // ErrorStatusNonWaiting             = errors.New("non-waiting status")

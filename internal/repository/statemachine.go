@@ -12,36 +12,36 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// func (r *Repository) GetStateMachineItemByID(ctx context.Context, id int) (*entities.StateMachineItem, error) {
-// 	query, args, err := r.sqlBuilder.
-// 		Select(
-// 			"i.item_id",
-// 			"i.state_machine_id",
-// 			"i.state_id",
-// 			"s.name as state_name",
-// 		).
-// 		From("state_machines_items i").
-// 		InnerJoin("states s ON i.state_id = s.state_id").
-// 		Where(squirrel.Eq{"item_id": id}).
-// 		ToSql()
+func (r *Repository) GetStateMachineItemByID(ctx context.Context, id int) (*entities.StateMachineItem, error) {
+	query, args, err := r.sqlBuilder.
+		Select(
+			"i.item_id",
+			"i.state_machine_id",
+			"i.state_id",
+			"s.name as state_name",
+		).
+		From("state_machines_items i").
+		InnerJoin("states s ON i.state_id = s.state_id").
+		Where(squirrel.Eq{"item_id": id}).
+		ToSql()
 
-// 	if err != nil {
-// 		return nil, fmt.Errorf("failed to build query: %w", err)
-// 	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
 
-// 	var stItem entities.StateMachineItem
-// 	err = r.db.GetContext(ctx, &stItem, query, args...)
+	var stItem entities.StateMachineItem
+	err = r.db.GetContext(ctx, &stItem, query, args...)
 
-// 	if err != nil {
-// 		if errors.Is(err, sql.ErrNoRows) {
-// 			return nil, internalErrs.ErrorSelectEmpty
-// 		}
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, internalErrs.ErrorSelectEmpty
+		}
 
-// 		return nil, fmt.Errorf("failed to find state machine item: %w", err)
-// 	}
+		return nil, fmt.Errorf("failed to find state machine item: %w", err)
+	}
 
-// 	return &stItem, nil
-// }
+	return &stItem, nil
+}
 
 // func (r *Repository) UpdateStateMachineItemState(ctx context.Context, stateMachineItemID, newStateID int) error {
 // 	query, args, err := r.sqlBuilder.
@@ -92,65 +92,65 @@ import (
 // 	return &state, nil
 // }
 
-// func (r *Repository) GetStateIDByName(ctx context.Context, name entities.StateName) (int, error) {
-// 	query, args, err := r.sqlBuilder.
-// 		Select(
-// 			"state_id",
-// 		).
-// 		From("states").
-// 		Where(squirrel.Eq{
-// 			"name": name,
-// 		}).
-// 		ToSql()
+func (r *Repository) GetStateIDByName(ctx context.Context, name entities.StateName) (int, error) {
+	query, args, err := r.sqlBuilder.
+		Select(
+			"state_id",
+		).
+		From("states").
+		Where(squirrel.Eq{
+			"name": name,
+		}).
+		ToSql()
 
-// 	if err != nil {
-// 		return 0, fmt.Errorf("failed to build query: %w", err)
-// 	}
+	if err != nil {
+		return 0, fmt.Errorf("failed to build query: %w", err)
+	}
 
-// 	var id int
-// 	err = r.db.GetContext(ctx, &id, query, args...)
+	var id int
+	err = r.db.GetContext(ctx, &id, query, args...)
 
-// 	if err != nil {
-// 		if errors.Is(err, sql.ErrNoRows) {
-// 			return 0, internalErrs.ErrorSelectEmpty
-// 		}
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, internalErrs.ErrorSelectEmpty
+		}
 
-// 		return 0, fmt.Errorf("failed to get state by name: %w", err)
-// 	}
+		return 0, fmt.Errorf("failed to get state by name: %w", err)
+	}
 
-// 	return id, nil
-// }
+	return id, nil
+}
 
-// func (r *Repository) CheckIsTransitionAvailable(ctx context.Context, stateMachineID, currentStateID, nextStateID int) (bool, error) {
-// 	query, args, err := r.sqlBuilder.
-// 		Select(
-// 			"transition_id",
-// 		).
-// 		From("state_transitions").
-// 		Where(squirrel.Eq{
-// 			"state_machine_id": stateMachineID,
-// 			"current_state_id": currentStateID,
-// 			"next_state_id":    nextStateID,
-// 		}).
-// 		ToSql()
+func (r *Repository) CheckIsTransitionAvailable(ctx context.Context, stateMachineID, currentStateID, nextStateID int) (bool, error) {
+	query, args, err := r.sqlBuilder.
+		Select(
+			"transition_id",
+		).
+		From("state_transitions").
+		Where(squirrel.Eq{
+			"state_machine_id": stateMachineID,
+			"current_state_id": currentStateID,
+			"next_state_id":    nextStateID,
+		}).
+		ToSql()
 
-// 	if err != nil {
-// 		return false, fmt.Errorf("failed to build query: %w", err)
-// 	}
+	if err != nil {
+		return false, fmt.Errorf("failed to build query: %w", err)
+	}
 
-// 	var id int
-// 	err = r.db.GetContext(ctx, &id, query, args...)
+	var id int
+	err = r.db.GetContext(ctx, &id, query, args...)
 
-// 	if err != nil {
-// 		if errors.Is(err, sql.ErrNoRows) {
-// 			return false, nil
-// 		}
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, nil
+		}
 
-// 		return false, fmt.Errorf("failed check transition available: %w", err)
-// 	}
+		return false, fmt.Errorf("failed check transition available: %w", err)
+	}
 
-// 	return true, nil
-// }
+	return true, nil
+}
 
 func (r *Repository) getStateMachineByName(ctx context.Context, name entities.StateMachineName) (*entities.StateMachine, error) {
 	query, args, err := r.sqlBuilder.
@@ -201,4 +201,23 @@ func (r *Repository) insertStateMachineItem(ctx context.Context, tx *sqlx.Tx, ma
 	}
 
 	return itemID, nil
+}
+
+func (r *Repository) updateStateMachineItemState(ctx context.Context, tx *sqlx.Tx, stateMachineItemID, newStateID int) error {
+	query, args, err := r.sqlBuilder.
+		Update("state_machines_items").
+		Set("state_id", newStateID).
+		Where(squirrel.Eq{"item_id": stateMachineItemID}).
+		ToSql()
+
+	if err != nil {
+		return fmt.Errorf("failed to build query: %w", err)
+	}
+
+	_, err = tx.ExecContext(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("failed to update state machine item: %w", err)
+	}
+
+	return nil
 }

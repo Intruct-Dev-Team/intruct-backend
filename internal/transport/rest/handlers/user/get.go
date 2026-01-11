@@ -118,12 +118,14 @@ func mappingToUserResp(user *entities.User) *getUserResponse {
 /* Mapping struct */
 
 type getUserResponse struct {
-	ID               int       `json:"id"                   example:"1"`
-	ExternalUUID     string    `json:"external_uuid"        example:"uuid"`
-	Email            string    `json:"email"                example:"qwerty@example.com"`
-	Name             string    `json:"name"                 example:"John"`
-	Surname          string    `json:"surname"              example:"Smith"`
-	RegistrationDate time.Time `json:"registration_date"    example:"2022-09-09T10:10:10+09:00"`
-	Birthdate        time.Time `json:"birthdate"            example:"2002-09-09T10:10:10+09:00"`
-	Avatar           string    `json:"avatar"               example:"uuid.png"`
+	ID                int       `json:"id"                   example:"1"`
+	ExternalUUID      string    `json:"external_uuid"        example:"uuid"`
+	Email             string    `json:"email"                example:"qwerty@example.com"`
+	Name              string    `json:"name"                 example:"John"`
+	Surname           string    `json:"surname"              example:"Smith"`
+	RegistrationDate  time.Time `json:"registration_date"    example:"2022-09-09T10:10:10+09:00"`
+	Birthdate         time.Time `json:"birthdate"            example:"2002-09-09T10:10:10+09:00"`
+	Avatar            string    `json:"avatar"               example:"uuid.png"`
+	CompletedCourses  int       `json:"completed_courses"    example:"1"`
+	InProgressCourses int       `json:"in_progress_courses"  example:"1"`
 }

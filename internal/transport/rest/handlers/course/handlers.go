@@ -10,11 +10,13 @@ import (
 )
 
 const (
-	courseRoute = "/course"
+	courseRoute  = "/course"
+	coursesRoute = "/courses"
 )
 
 type CourseService interface {
 	CreateCourse(ctx context.Context, course *entities.Course) (int, error)
+	UploadCourseContent(ctx context.Context, course *entities.Course) error
 }
 
 type CourseHandlers struct {
@@ -36,4 +38,8 @@ func (h *CourseHandlers) SetupCourseRoutes(router *chi.Mux, jwtAuthMiddleware fu
 
 		r.Post(courseRoute, h.CreateCourse())
 	})
+
+	coursesRouter := chi.NewRouter()
+	coursesRouter.Patch(UploadCourseRoute, h.UploadCourseContent())
+	router.Mount(coursesRoute, coursesRouter)
 }

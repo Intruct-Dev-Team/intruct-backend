@@ -12,7 +12,7 @@ type Course struct {
 	CreatedAt          time.Time `db:"created_at"`
 	UpdatedAt          time.Time `db:"updated_at"`
 
-	// Modules
+	Modules          []*Module         `db:"-"`
 	Language         string            `db:"-"`
 	StateMachineName StateMachineName  `db:"-"`
 	StateMachineItem *StateMachineItem `db:"-"`
