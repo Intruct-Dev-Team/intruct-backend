@@ -7,3 +7,17 @@ generate-swagger:
 	@swag init -g ./cmd/main/main.go -o ./_docs/swagger
 
 # migrate create -ext sql -dir migrations -seq create_teachers_table
+
+
+include .env
+export
+
+.PHONY: token
+token:
+	@curl -s \
+	  -X POST '$(SUPABASE_URL)/auth/v1/token?grant_type=password' \
+	  -H 'Content-Type: application/json' \
+	  -H 'apikey: $(SUPABASE_ANON_KEY)' \
+	  -d '{"email":"$(SUPABASE_EMAIL)","password":"$(SUPABASE_PASSWORD)"}' \
+	  | jq -r '.access_token'
+	

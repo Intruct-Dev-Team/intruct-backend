@@ -114,7 +114,7 @@ func SystemAuthMiddleware(userService UserService, log *zap.Logger) func(http.Ha
 
 			if !exists {
 				log.Warn("user not found", zap.String("external_uuid", userUUID))
-				httputils.RespondWith401(w, "You do not complete registration", log)
+				httputils.RespondWith401(w, "registration was not completed", log)
 				return
 			}
 

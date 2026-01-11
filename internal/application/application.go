@@ -14,7 +14,7 @@ import (
 	"github.com/Intruct-Dev-Team/intruct-backend/pkg/jwt"
 	"github.com/Intruct-Dev-Team/intruct-backend/pkg/migrator"
 	"github.com/Intruct-Dev-Team/intruct-backend/pkg/storage/db/postgres"
-	"github.com/Intruct-Dev-Team/intruct-backend/pkg/storage/object/s3"
+	"github.com/Intruct-Dev-Team/intruct-backend/pkg/storage/object/supabase"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
@@ -84,12 +84,12 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 
 	log.Info("connected to database successfully")
 
-	s3Client, err := s3.NewClient(&config.S3)
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to S3 object storage (supabase): %w", err)
-	}
+	// s3Client, err := s3.NewClient(&config.S3)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to connect to S3 object storage (supabase): %w", err)
+	// }
 
-	log.Info("connected to S3 object storage successfully")
+	// log.Info("connected to S3 object storage successfully")
 
 	repo := repository.New(database)
 
@@ -107,11 +107,11 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 	// services
 	// kratosService := kratos.New(config.Kratos)
 	jwtService := jwt.NewService(config.JwtSecretKey, jwt.WithIssuer("learn-share-backend"))
-	s3Service := s3.NewService(s3Client, config.S3.Bucket, config.S3.Host)
+	fileService := supabase.NewService(&config.ObjectStorage)
 	// liveKitService := livekit.NewService(config.LiveKit)
 	// commonService := common.NewService(repo)
 
-	userService := user.NewService(repo, s3Service)
+	userService := user.NewService(repo, fileService)
 	courseService := course.NewService(repo)
 	// teacherService := teacher.NewService(repo)
 	// scheduleService := schedule.NewService(repo)
