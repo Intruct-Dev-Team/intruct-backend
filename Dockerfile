@@ -24,5 +24,7 @@ RUN apk --no-cache add ca-certificates
 COPY --from=builder /app/app-binary .
 COPY ./migrations /app/migrations/
 
+EXPOSE 8080
+
 # Run the binary
 CMD ["/app/app-binary"]

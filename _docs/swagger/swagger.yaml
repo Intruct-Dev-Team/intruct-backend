@@ -154,7 +154,7 @@ definitions:
         example: Smith
         type: string
     type: object
-host: localhost:8080
+host: localhost:80
 info:
   contact:
     email: ruslanrbb8@gmail.com

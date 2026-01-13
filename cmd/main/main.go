@@ -21,7 +21,7 @@ import (
 // @contact.url    https://t.me/Ruslan20007
 // @contact.email  ruslanrbb8@gmail.com
 
-// @host         localhost:8080
+// @host         localhost:80
 // @BasePath     /api
 
 // @securityDefinitions.apikey BearerAuth
