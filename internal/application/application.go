@@ -9,6 +9,7 @@ import (
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/config"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/repository"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/course"
+	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/n8n"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/user"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest"
 	"github.com/Intruct-Dev-Team/intruct-backend/pkg/jwt"
@@ -27,6 +28,7 @@ type Application struct {
 
 type Services struct {
 	jwt.JWTService
+	n8n.N8NService
 	user.UserService
 	course.CourseService
 	// 	kratos.KratosService
@@ -43,6 +45,7 @@ type Services struct {
 
 func NewServices(
 	jwtService *jwt.JWTService,
+	n8nService *n8n.N8NService,
 	userService *user.UserService,
 	courseService *course.CourseService,
 	// kratosService *kratos.KratosService,
@@ -58,6 +61,7 @@ func NewServices(
 ) *Services {
 	return &Services{
 		JWTService:    *jwtService,
+		N8NService:    *n8nService,
 		UserService:   *userService,
 		CourseService: *courseService,
 		// 		KratosService:    *kratosService,
@@ -107,6 +111,7 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 	// services
 	// kratosService := kratos.New(config.Kratos)
 	jwtService := jwt.NewService(config.JwtSecretKey, jwt.WithIssuer("learn-share-backend"))
+	n8nService := n8n.NewService(config.N8NApiRoute, log)
 	fileService := supabase.NewService(&config.ObjectStorage)
 	// liveKitService := livekit.NewService(config.LiveKit)
 	// commonService := common.NewService(repo)
@@ -124,6 +129,7 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 
 	services := NewServices(
 		jwtService,
+		n8nService,
 		userService,
 		courseService,
 	// 	kratosService,

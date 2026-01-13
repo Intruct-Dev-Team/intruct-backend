@@ -22,8 +22,9 @@ type Config struct {
 	Migrator      migrator.Config
 	Server        rest.Config
 	ObjectStorage supabase.Config
-	IsInitDb      bool   `env:"IS_INIT_DB" env-required:"true"`
-	JwtSecretKey  string `env:"JWT_SECRET_KEY" env-required:"true"`
+	IsInitDb      bool   `env:"IS_INIT_DB"       env-required:"true"`
+	JwtSecretKey  string `env:"JWT_SECRET_KEY"   env-required:"true"`
+	N8NApiRoute   string `env:"N8N_API_INTERNAL" env-required:"true"`
 }
 
 func LoadConfig(paths []string) (*Config, error) {

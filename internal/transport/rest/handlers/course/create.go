@@ -3,6 +3,8 @@ package course
 import (
 	"errors"
 	"net/http"
+	"path/filepath"
+	"strings"
 
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/entities"
 	serviceErrs "github.com/Intruct-Dev-Team/intruct-backend/internal/errors"
@@ -64,7 +66,7 @@ func (h *CourseHandlers) CreateCourse() http.HandlerFunc {
 			return
 		}
 
-		file, _, err := r.FormFile("file") //fileHeader
+		file, fileHeader, err := r.FormFile("file")
 		if err != nil {
 			h.log.Debug("failed to get file from form", zap.Error(err))
 			httputils.RespondWith400(w, "file is required", h.log)
@@ -76,6 +78,13 @@ func (h *CourseHandlers) CreateCourse() http.HandlerFunc {
 				h.log.Error("failed to close file", zap.Error(err))
 			}
 		}()
+
+		fileName := fileHeader.Filename
+		ext := strings.ToLower(filepath.Ext(fileName))
+		if ext != ".pdf" && ext != ".txt" {
+			httputils.RespondWith400(w, "only .pdf and .txt files are allowed", h.log)
+			return
+		}
 
 		course := &entities.Course{
 			OwnerID:     userID,
@@ -103,9 +112,12 @@ func (h *CourseHandlers) CreateCourse() http.HandlerFunc {
 		}
 
 		// n8n call
-		//file, fileHeader.Size
-		//TODO: n8n connection
-		h.log.Warn("N8N REALIZATION MISSING")
+		err = h.n8nService.SendCourse(r.Context(), course, file, fileHeader.Size, fileName)
+		if err != nil {
+			h.log.Error("failed to send course to n8n", zap.Error(err))
+			httputils.RespondWith500(w, h.log)
+			return
+		}
 
 		response := createCourseResponse{
 			CourseID: courseID,

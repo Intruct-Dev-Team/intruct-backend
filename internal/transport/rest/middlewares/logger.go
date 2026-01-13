@@ -13,12 +13,15 @@ import (
 )
 
 const (
-	maxLogLenValue = 100
-	filteredValue  = "[FILTERED]"
-	truncatedValue = "[TRUNCATED]"
+	maxLogLenValue   = 100
+	maxBodySizeToLog = 10 * 1024
+	filteredValue    = "[FILTERED]"
+	truncatedValue   = "[TRUNCATED]"
+	fileTooLarge     = "[FILE_TOO_LARGE]"
+	binaryContent    = "[BINARY_CONTENT]"
 )
 
-// list of sensitive fields, which should be mascked
+// list of sensitive fields, which should be masked
 var sensitiveFields = []string{
 	"password",
 	"token",
@@ -54,8 +57,39 @@ func (rw *responseWriter) Write(body []byte) (int, error) {
 	return rw.ResponseWriter.Write(body)
 }
 
+// isMultipartFormData checks if content type is multipart/form-data
+func isMultipartFormData(contentType string) bool {
+	return strings.HasPrefix(strings.ToLower(contentType), "multipart/form-data")
+}
+
+// isBinaryContent checks if content appears to be binary
+func isBinaryContent(data []byte) bool {
+	// Check first 512 bytes for non-printable characters
+	checkLen := len(data)
+	if checkLen > 512 {
+		checkLen = 512
+	}
+
+	for i := 0; i < checkLen; i++ {
+		b := data[i]
+		// If byte is not printable ASCII and not common whitespace
+		if b < 0x20 && b != '\n' && b != '\r' && b != '\t' {
+			return true
+		}
+		if b > 0x7E {
+			return true
+		}
+	}
+	return false
+}
+
 // maskSensitiveAndBigData mask sensitive data in JSON
 func maskSensitiveAndBigData(data []byte) string {
+	// Check if data is binary
+	if isBinaryContent(data) {
+		return binaryContent
+	}
+
 	// try parse JSON
 	var jsonMap map[string]interface{}
 	if err := json.Unmarshal(data, &jsonMap); err != nil {
@@ -65,6 +99,11 @@ func maskSensitiveAndBigData(data []byte) string {
 			if strings.Contains(strings.ToLower(bodyStr), field) {
 				return filteredValue
 			}
+		}
+
+		// Truncate if too long
+		if len(bodyStr) > maxLogLenValue {
+			return bodyStr[:maxLogLenValue] + "..." + truncatedValue
 		}
 		return bodyStr
 	}
@@ -93,7 +132,7 @@ func maskJSONFields(data map[string]interface{}) {
 
 		// mask long strings
 		if str, ok := value.(string); ok && len(str) > maxLogLenValue {
-			data[key] = truncatedValue
+			data[key] = str[:maxLogLenValue] + "..." + truncatedValue
 		}
 
 		// recursively process nested objects
@@ -105,7 +144,7 @@ func maskJSONFields(data map[string]interface{}) {
 				if mapItem, ok := item.(map[string]interface{}); ok {
 					maskJSONFields(mapItem)
 				} else if str, ok := item.(string); ok && len(str) > maxLogLenValue {
-					v[i] = truncatedValue
+					v[i] = str[:maxLogLenValue] + "..." + truncatedValue
 				}
 			}
 		}
@@ -135,11 +174,20 @@ func LoggerMiddleware(logger *zap.Logger) func(http.Handler) http.Handler {
 				zap.String("path", r.URL.Path),
 			)
 
-			// read and mask request body
+			// Check content type - skip body reading for multipart/form-data
+			contentType := r.Header.Get("Content-Type")
 			var requestBody []byte
-			if r.Body != nil {
+			shouldLogBody := true
+
+			if isMultipartFormData(contentType) {
+				// Don't read multipart form data body - it contains files
+				shouldLogBody = false
+			} else if r.Body != nil && r.ContentLength <= maxBodySizeToLog {
+				// Only read body if it's not too large
 				requestBody, _ = io.ReadAll(r.Body)
 				r.Body = io.NopCloser(bytes.NewBuffer(requestBody))
+			} else if r.ContentLength > maxBodySizeToLog {
+				shouldLogBody = false
 			}
 
 			rw := newResponseWriter(w)
@@ -155,14 +203,26 @@ func LoggerMiddleware(logger *zap.Logger) func(http.Handler) http.Handler {
 
 			// log request body / response body only in case of error
 			if rw.status >= 400 {
-				maskedRequest := maskSensitiveAndBigData(requestBody)
-				logFields = append(logFields,
-					zap.String("error_code", http.StatusText(rw.status)),
-					zap.String("request_body", maskedRequest),
-				)
+				if shouldLogBody && len(requestBody) > 0 {
+					maskedRequest := maskSensitiveAndBigData(requestBody)
+					logFields = append(logFields,
+						zap.String("error_code", http.StatusText(rw.status)),
+						zap.String("request_body", maskedRequest),
+					)
+				} else if isMultipartFormData(contentType) {
+					logFields = append(logFields,
+						zap.String("error_code", http.StatusText(rw.status)),
+						zap.String("request_body", "[MULTIPART_FORM_DATA]"),
+					)
+				} else if r.ContentLength > maxBodySizeToLog {
+					logFields = append(logFields,
+						zap.String("error_code", http.StatusText(rw.status)),
+						zap.String("request_body", fileTooLarge),
+					)
+				}
 
 				// mask response body
-				if rw.body.Len() > 0 {
+				if rw.body.Len() > 0 && rw.body.Len() <= maxBodySizeToLog {
 					maskedResponse := maskSensitiveAndBigData(rw.body.Bytes())
 					logFields = append(logFields, zap.String("response_body", maskedResponse))
 				}

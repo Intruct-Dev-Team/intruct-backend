@@ -12,6 +12,7 @@ import (
 type Services interface {
 	user.UserService
 	course.CourseService
+	course.N8NService
 }
 
 type Handlers struct {
@@ -36,7 +37,8 @@ func (h *Handlers) SetupRoutes(router *chi.Mux,
 	userHandlers.SetupUserRoutes(router, jwtAuthMiddleware, systemAuthMiddleware)
 
 	var courseService course.CourseService = h.services
-	courseHandlers := course.NewCourseHandlers(courseService, h.log)
+	var n8nService course.N8NService = h.services
+	courseHandlers := course.NewCourseHandlers(courseService, n8nService, h.log)
 	courseHandlers.SetupCourseRoutes(router, jwtAuthMiddleware, systemAuthMiddleware)
 
 	// var teacherService teacher.TeacherService = h.services

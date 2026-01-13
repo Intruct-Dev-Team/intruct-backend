@@ -2,6 +2,7 @@ package course
 
 import (
 	"context"
+	"io"
 	"net/http"
 
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/entities"
@@ -19,14 +20,20 @@ type CourseService interface {
 	UploadCourseContent(ctx context.Context, course *entities.Course) error
 }
 
+type N8NService interface {
+	SendCourse(ctx context.Context, course *entities.Course, fileReader io.Reader, fileSize int64, fileName string) error
+}
+
 type CourseHandlers struct {
 	courseService CourseService
+	n8nService    N8NService
 	log           *zap.Logger
 }
 
-func NewCourseHandlers(courseService CourseService, log *zap.Logger) *CourseHandlers {
+func NewCourseHandlers(courseService CourseService, n8nService N8NService, log *zap.Logger) *CourseHandlers {
 	return &CourseHandlers{
 		courseService: courseService,
+		n8nService:    n8nService,
 		log:           log,
 	}
 }
