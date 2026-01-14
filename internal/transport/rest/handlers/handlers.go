@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest/handlers/course"
+	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest/handlers/language"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest/handlers/user"
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/zap"
@@ -11,6 +12,7 @@ import (
 
 type Services interface {
 	user.UserService
+	language.LanguageService
 	course.CourseService
 	course.N8NService
 }
@@ -35,6 +37,10 @@ func (h *Handlers) SetupRoutes(router *chi.Mux,
 	var userService user.UserService = h.services
 	userHandlers := user.NewUserHandlers(userService, h.log)
 	userHandlers.SetupUserRoutes(router, jwtAuthMiddleware, systemAuthMiddleware)
+
+	var languageService language.LanguageService = h.services
+	languageHandlers := language.NewLanguageHandlers(languageService, h.log)
+	languageHandlers.SetupLanguageRoutes(router)
 
 	var courseService course.CourseService = h.services
 	var n8nService course.N8NService = h.services

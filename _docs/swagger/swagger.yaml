@@ -101,6 +101,14 @@ definitions:
       error:
         type: string
     type: object
+  language.getLanguagesResponse:
+    description: get languages getLanguagesResponse.
+    properties:
+      languages:
+        items:
+          type: string
+        type: array
+    type: object
   user.completeRegistrationRequest:
     description: completeRegistrationRequest to complete user registration.
     properties:
@@ -295,6 +303,23 @@ paths:
       summary: Upload course content
       tags:
       - course
+  /languages:
+    get:
+      description: Get list of all languages
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/language.getLanguagesResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      summary: Get languages
+      tags:
+      - languages
   /user/profile:
     get:
       description: 'Get info about user by jwt token (in Authorization enter: Bearer

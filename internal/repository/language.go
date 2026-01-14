@@ -35,3 +35,26 @@ func (r *Repository) GetLanguageIDByName(ctx context.Context, languageName strin
 
 	return languageID, nil
 }
+
+func (r *Repository) GetLanguages(ctx context.Context) ([]string, error) {
+	query, args, err := r.sqlBuilder.Select("name").
+		From("languages").
+		ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	var languages []string
+
+	err = r.db.SelectContext(ctx, &languages, query, args...)
+	if err != nil {
+		// // empty categories isn't error
+		// if errors.Is(err, sql.ErrNoRows) {
+		// 	return languages, nil
+		// }
+
+		return nil, fmt.Errorf("failed to find languages: %w", err)
+	}
+
+	return languages, nil
+}

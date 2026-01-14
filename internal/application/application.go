@@ -9,6 +9,7 @@ import (
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/config"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/repository"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/course"
+	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/language"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/n8n"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/user"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest"
@@ -30,6 +31,7 @@ type Services struct {
 	jwt.JWTService
 	n8n.N8NService
 	user.UserService
+	language.LanguageService
 	course.CourseService
 	// 	kratos.KratosService
 	// 	teacher.TeacherService
@@ -47,6 +49,7 @@ func NewServices(
 	jwtService *jwt.JWTService,
 	n8nService *n8n.N8NService,
 	userService *user.UserService,
+	languageService *language.LanguageService,
 	courseService *course.CourseService,
 	// kratosService *kratos.KratosService,
 	// teacherService *teacher.TeacherService,
@@ -60,10 +63,11 @@ func NewServices(
 	// commonService *common.CommonService,
 ) *Services {
 	return &Services{
-		JWTService:    *jwtService,
-		N8NService:    *n8nService,
-		UserService:   *userService,
-		CourseService: *courseService,
+		JWTService:      *jwtService,
+		N8NService:      *n8nService,
+		UserService:     *userService,
+		LanguageService: *languageService,
+		CourseService:   *courseService,
 		// 		KratosService:    *kratosService,
 		// 		TeacherService:   *teacherService,
 		// 		ScheduleService:  *scheduleService,
@@ -117,6 +121,7 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 	// commonService := common.NewService(repo)
 
 	userService := user.NewService(repo, fileService)
+	languageService := language.NewService(repo)
 	courseService := course.NewService(repo)
 	// teacherService := teacher.NewService(repo)
 	// scheduleService := schedule.NewService(repo)
@@ -131,6 +136,7 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 		jwtService,
 		n8nService,
 		userService,
+		languageService,
 		courseService,
 	// 	kratosService,
 	// 	jwtService,
