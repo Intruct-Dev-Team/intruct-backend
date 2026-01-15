@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -53,6 +54,9 @@ func (r *Repository) GetCourseByID(ctx context.Context, id int) (*entities.Cours
 		ToSql()
 
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, internalErrs.ErrorSelectEmpty
+		}
 		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 

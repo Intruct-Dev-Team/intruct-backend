@@ -120,10 +120,10 @@ func SystemAuthMiddleware(userService UserService, log *zap.Logger) func(http.Ha
 
 			ctx := context.WithValue(r.Context(), contextkeys.UserIDKey, userID)
 
-			log.Debug("user authenticated successfully",
-				zap.Int("user_id", userID),
-				zap.String("path", r.URL.Path),
-			)
+			// log.Debug("user authenticated successfully",
+			// 	zap.Int("user_id", userID),
+			// 	zap.String("path", r.URL.Path),
+			// )
 
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})

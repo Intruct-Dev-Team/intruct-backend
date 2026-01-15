@@ -85,6 +85,18 @@ func (s *N8NService) SendCourse(ctx context.Context, course *entities.Course, fi
 
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 
+	// Debug log request details (without file content)
+	s.log.Debug("sending request to n8n",
+		zap.String("url", url),
+		zap.String("method", http.MethodPost),
+		zap.Int("course_id", course.ID),
+		zap.String("course_title", course.Title),
+		zap.String("language", course.Language),
+		zap.String("file_name", fileName),
+		zap.Int64("file_size", fileSize),
+		zap.String("content_type", writer.FormDataContentType()),
+	)
+
 	// Send request
 	resp, err := s.httpClient.Do(req)
 	if err != nil {

@@ -112,6 +112,7 @@ func (h *CourseHandlers) CreateCourse() http.HandlerFunc {
 		}
 
 		// n8n call
+		course.ID = courseID // set courseID
 		err = h.n8nService.SendCourse(r.Context(), course, file, fileHeader.Size, fileName)
 		if err != nil {
 			h.log.Error("failed to send course to n8n", zap.Error(err))

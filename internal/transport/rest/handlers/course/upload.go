@@ -34,7 +34,7 @@ func (h *CourseHandlers) UploadCourseContent() http.HandlerFunc {
 		courseID, err := httputils.GetIntParamFromRequestPath(r, "course_id")
 		if err != nil {
 			h.log.Debug("failed to parse id from URL path", zap.Error(err))
-			httputils.RespondWith400(w, "missed {course_id} param in url path", h.log)
+			httputils.RespondWith400(w, "incorrect or missed {course_id} param in url path", h.log)
 
 			return
 		}
