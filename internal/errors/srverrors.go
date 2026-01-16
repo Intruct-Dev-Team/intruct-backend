@@ -10,9 +10,11 @@ var (
 
 	ErrorUserNotFound = errors.New("user not found")
 
-	ErrorLanguageNotFound = errors.New("language not found")
-	ErrorCourseExists     = errors.New("course already exists")
-	ErrorCourseNotFound   = errors.New("course not found")
+	ErrorLanguageNotFound       = errors.New("language not found")
+	ErrorCourseExists           = errors.New("course already exists")
+	ErrorCourseNotFound         = errors.New("course not found")
+	ErrorCourseAlreadyPublished = errors.New("course already published")
+	ErrorNotCourseOwner         = errors.New("user is not the owner of the course")
 
 // ErrorUserIsNotTeacher = errors.New("user is not a teacher")
 

@@ -17,6 +17,7 @@ type Repository interface {
 	GetStateIDByName(ctx context.Context, name entities.StateName) (int, error)
 	GetStateMachineItemByID(ctx context.Context, id int) (*entities.StateMachineItem, error)
 	CheckIsTransitionAvailable(ctx context.Context, stateMachineID, currentStateID, nextStateID int) (bool, error)
+	UpdateStateMachineItemState(ctx context.Context, stateMachineItemID, newStateID int) error
 }
 
 type CourseService struct {
