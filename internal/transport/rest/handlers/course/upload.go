@@ -96,10 +96,11 @@ func (h *CourseHandlers) UploadCourseContent() http.HandlerFunc {
 		}
 
 		course := &entities.Course{
-			ID:       courseID,
-			Title:    req.CourseTitle,
-			Language: req.Language,
-			Modules:  modules,
+			ID:           courseID,
+			Title:        req.CourseTitle,
+			LessonsCount: req.TotalLessons,
+			Language:     req.Language,
+			Modules:      modules,
 		}
 
 		err = h.courseService.UploadCourseContent(r.Context(), course)

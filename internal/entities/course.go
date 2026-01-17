@@ -7,6 +7,7 @@ type Course struct {
 	OwnerID            int       `db:"owner_id"`
 	Title              string    `db:"title"`
 	Description        string    `db:"description"`
+	LessonsCount       int       `db:"lessons_count"`
 	LanguageID         int       `db:"language_id"`
 	StateMachineItemID int       `db:"state_machine_item_id"`
 	CreatedAt          time.Time `db:"created_at"`

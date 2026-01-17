@@ -146,6 +146,7 @@ func (r *Repository) ImplementCourse(ctx context.Context, course *entities.Cours
 		Update("courses").
 		Set("title", course.Title).
 		Set("description", course.Description).
+		Set("lessons_count", course.LessonsCount).
 		Set("updated_at", squirrel.Expr("NOW()")).
 		Where(squirrel.Eq{"course_id": course.ID}).
 		ToSql()
