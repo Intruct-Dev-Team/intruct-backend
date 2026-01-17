@@ -154,6 +154,57 @@ const docTemplate = `{
                 }
             }
         },
+        "/courses": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get list of courses with optional filter for user's courses\nPrerequisites: User must be authenticated",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "List courses",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Filter user's courses (true/false)",
+                        "name": "in_mine",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/course.listCoursesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query parameter",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication required",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    }
+                }
+            }
+        },
         "/courses/{course_id}/publish": {
             "put": {
                 "security": [
@@ -383,6 +434,56 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "course.courseItem": {
+            "description": "courseItem represents a course in the list",
+            "type": "object",
+            "properties": {
+                "author_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Learn Go programming language"
+                },
+                "finished_lessons": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "is_in_mine": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "is_mine": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "is_public": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "lessons_number": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Introduction to Go"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
+                }
+            }
+        },
         "course.createCourseResponse": {
             "description": "createCourseResponse returns created course ID",
             "type": "object",
@@ -390,6 +491,18 @@ const docTemplate = `{
                 "course_id": {
                     "type": "integer",
                     "example": 1
+                }
+            }
+        },
+        "course.listCoursesResponse": {
+            "description": "listCoursesResponse returns list of courses",
+            "type": "object",
+            "properties": {
+                "courses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/course.courseItem"
+                    }
                 }
             }
         },

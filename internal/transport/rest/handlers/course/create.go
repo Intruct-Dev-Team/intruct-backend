@@ -13,7 +13,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const CreateCourseRoute = ""
+const CreateCourseRoute = "/course"
 
 // CreateCourse creates a new course
 // @Summary      Create course

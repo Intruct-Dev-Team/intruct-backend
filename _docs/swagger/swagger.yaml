@@ -1,11 +1,56 @@
 basePath: /api
 definitions:
+  course.courseItem:
+    description: courseItem represents a course in the list
+    properties:
+      author_id:
+        example: 1
+        type: integer
+      created_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+      description:
+        example: Learn Go programming language
+        type: string
+      finished_lessons:
+        example: 5
+        type: integer
+      id:
+        example: 1
+        type: integer
+      is_in_mine:
+        example: false
+        type: boolean
+      is_mine:
+        example: false
+        type: boolean
+      is_public:
+        example: true
+        type: boolean
+      lessons_number:
+        example: 10
+        type: integer
+      title:
+        example: Introduction to Go
+        type: string
+      updated_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+    type: object
   course.createCourseResponse:
     description: createCourseResponse returns created course ID
     properties:
       course_id:
         example: 1
         type: integer
+    type: object
+  course.listCoursesResponse:
+    description: listCoursesResponse returns list of courses
+    properties:
+      courses:
+        items:
+          $ref: '#/definitions/course.courseItem'
+        type: array
     type: object
   course.uploadCourseRequest:
     description: uploadCourseRequest contains processed course content from n8n
@@ -262,6 +307,40 @@ paths:
       security:
       - BearerAuth: []
       summary: Create course
+      tags:
+      - course
+  /courses:
+    get:
+      description: |-
+        Get list of courses with optional filter for user's courses
+        Prerequisites: User must be authenticated
+      parameters:
+      - description: Filter user's courses (true/false)
+        in: query
+        name: in_mine
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/course.listCoursesResponse'
+        "400":
+          description: Invalid query parameter
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "401":
+          description: Authentication required
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      security:
+      - BearerAuth: []
+      summary: List courses
       tags:
       - course
   /courses/{course_id}/publish:

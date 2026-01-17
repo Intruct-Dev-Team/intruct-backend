@@ -37,20 +37,77 @@ func (r *Repository) IsCourseExistsByOwnerAndTitle(ctx context.Context, ownerID 
 	return exists, nil
 }
 
+func (r *Repository) GetOwnCourseIDs(ctx context.Context, userID int) ([]int, error) {
+	query, args, err := r.sqlBuilder.
+		Select("course_id").
+		From("courses").
+		Where(squirrel.Eq{"owner_id": userID}).
+		ToSql()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	var courseIDs []int
+	err = r.db.SelectContext(ctx, &courseIDs, query, args...)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, internalErrs.ErrorSelectEmpty
+		}
+		return nil, fmt.Errorf("failed to get own course IDs for user [%d]: %w", userID, err)
+	}
+
+	if len(courseIDs) == 0 {
+		return nil, internalErrs.ErrorSelectEmpty
+	}
+
+	return courseIDs, nil
+}
+
+func (r *Repository) GetPublicCourseIDs(ctx context.Context) ([]int, error) {
+	query, args, err := r.sqlBuilder.
+		Select("course_id").
+		From("courses").
+		Where(squirrel.Eq{"is_public": true}).
+		ToSql()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	var courseIDs []int
+	err = r.db.SelectContext(ctx, &courseIDs, query, args...)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, internalErrs.ErrorSelectEmpty
+		}
+		return nil, fmt.Errorf("failed to get public course IDs: %w", err)
+	}
+
+	if len(courseIDs) == 0 {
+		return nil, internalErrs.ErrorSelectEmpty
+	}
+
+	return courseIDs, nil
+}
+
 func (r *Repository) GetCourseByID(ctx context.Context, id int) (*entities.Course, error) {
 	query, args, err := r.sqlBuilder.
 		Select(
-			"course_id",
-			"owner_id",
-			"title",
-			"description",
-			"language_id",
-			"state_machine_item_id",
-			"created_at",
-			"updated_at",
+			"c.course_id",
+			"c.owner_id",
+			"c.title",
+			"c.description",
+			"c.lessons_count",
+			"c.language_id",
+			"c.state_machine_item_id",
+			"c.created_at",
+			"c.updated_at",
+			"l.name AS language",
 		).
-		From("courses").
-		Where(squirrel.Eq{"course_id": id}).
+		From("courses c").
+		LeftJoin("languages l ON c.language_id = l.language_id").
+		Where(squirrel.Eq{"c.course_id": id}).
 		ToSql()
 
 	if err != nil {

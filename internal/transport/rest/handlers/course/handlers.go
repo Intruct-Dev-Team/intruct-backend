@@ -11,7 +11,6 @@ import (
 )
 
 const (
-	courseRoute  = "/course"
 	coursesRoute = "/courses"
 )
 
@@ -19,6 +18,7 @@ type CourseService interface {
 	CreateCourse(ctx context.Context, course *entities.Course) (int, error)
 	UploadCourseContent(ctx context.Context, course *entities.Course) error
 	PublishCourse(ctx context.Context, courseID int, userID int) error
+	GetCourseList(ctx context.Context, userID int, inMine bool) ([]*entities.Course, error)
 }
 
 type N8NService interface {
@@ -43,13 +43,14 @@ func (h *CourseHandlers) SetupCourseRoutes(router *chi.Mux, jwtAuthMiddleware fu
 	router.Group(func(r chi.Router) {
 		r.Use(jwtAuthMiddleware)
 		r.Use(systemAuthMiddleware)
-		r.Post(courseRoute, h.CreateCourse())
+		r.Post(CreateCourseRoute, h.CreateCourse())
 	})
 
 	coursesRouter := chi.NewRouter()
 	coursesRouter.Group(func(r chi.Router) {
 		r.Use(jwtAuthMiddleware)
 		r.Use(systemAuthMiddleware)
+		r.Get(ListCoursesRoute, h.ListCourses())
 		r.Put(PublishCourseRoute, h.PublishCourse())
 	})
 	coursesRouter.Patch(UploadCourseRoute, h.UploadCourseContent())

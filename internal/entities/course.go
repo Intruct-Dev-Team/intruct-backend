@@ -14,10 +14,9 @@ type Course struct {
 	UpdatedAt          time.Time `db:"updated_at"`
 	IsPublic           bool      `db:"is_public"`
 
+	Language          string             `db:"language"`
 	Modules           []*Module          `db:"-"`
-	Language          string             `db:"-"`
 	StateMachineName  StateMachineName   `db:"-"`
 	StateMachineItem  *StateMachineItem  `db:"-"`
 	CourseProgression *CourseProgression `db:"-"`
-	IsInMine          bool               `db:"-"`
 }
