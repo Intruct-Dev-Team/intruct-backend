@@ -11,9 +11,12 @@ type Course struct {
 	StateMachineItemID int       `db:"state_machine_item_id"`
 	CreatedAt          time.Time `db:"created_at"`
 	UpdatedAt          time.Time `db:"updated_at"`
+	IsPublic           bool      `db:"is_public"`
 
-	Modules          []*Module         `db:"-"`
-	Language         string            `db:"-"`
-	StateMachineName StateMachineName  `db:"-"`
-	StateMachineItem *StateMachineItem `db:"-"`
+	Modules           []*Module          `db:"-"`
+	Language          string             `db:"-"`
+	StateMachineName  StateMachineName   `db:"-"`
+	StateMachineItem  *StateMachineItem  `db:"-"`
+	CourseProgression *CourseProgression `db:"-"`
+	IsInMine          bool               `db:"-"`
 }

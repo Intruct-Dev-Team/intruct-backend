@@ -193,3 +193,23 @@ func (r *Repository) ImplementCourse(ctx context.Context, course *entities.Cours
 
 	return nil
 }
+
+func (r *Repository) SetIsPublicField(ctx context.Context, courseID int, isPublic bool) error {
+
+	query, args, err := r.sqlBuilder.
+		Update("courses").
+		Set("is_public", isPublic).
+		Set("updated_at", squirrel.Expr("NOW()")).
+		Where(squirrel.Eq{"course_id": isPublic}).
+		ToSql()
+
+	if err != nil {
+		return fmt.Errorf("failed to build update course query: %w", err)
+	}
+
+	if _, err := r.db.ExecContext(ctx, query, args...); err != nil {
+		return fmt.Errorf("failed to update course: %w", err)
+	}
+
+	return nil
+}

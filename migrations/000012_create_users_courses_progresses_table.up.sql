@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS public.users_courses_progresses(
        is_finished BOOLEAN NOT NULL DEFAULT FALSE,
        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-       PRIMARY KEY (user_id, course_id, current_lesson_id)
+       PRIMARY KEY (user_id, course_id)
 );

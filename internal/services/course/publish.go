@@ -65,5 +65,9 @@ func (s *CourseService) PublishCourse(ctx context.Context, courseID int, userID 
 		return fmt.Errorf("failed to publish course: %w", err)
 	}
 
+	if err := s.repo.SetIsPublicField(ctx, courseID, true); err != nil {
+		return fmt.Errorf("failed to set is_public field for course: %w", err)
+	}
+
 	return nil
 }
