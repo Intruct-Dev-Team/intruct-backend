@@ -103,6 +103,7 @@ func (r *Repository) GetCourseByID(ctx context.Context, id int) (*entities.Cours
 			"c.state_machine_item_id",
 			"c.created_at",
 			"c.updated_at",
+			"c.is_public",
 			"l.name AS language",
 		).
 		From("courses c").
@@ -258,7 +259,7 @@ func (r *Repository) SetIsPublicField(ctx context.Context, courseID int, isPubli
 		Update("courses").
 		Set("is_public", isPublic).
 		Set("updated_at", squirrel.Expr("NOW()")).
-		Where(squirrel.Eq{"course_id": isPublic}).
+		Where(squirrel.Eq{"course_id": courseID}).
 		ToSql()
 
 	if err != nil {
