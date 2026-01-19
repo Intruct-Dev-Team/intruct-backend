@@ -21,8 +21,9 @@ import (
 // @contact.url    https://t.me/Ruslan20007
 // @contact.email  ruslanrbb8@gmail.com
 
-// @host         localhost:80
+// @host         intruct.com:80
 // @BasePath     /api
+// @schemes https
 
 // @securityDefinitions.apikey BearerAuth
 // @in header

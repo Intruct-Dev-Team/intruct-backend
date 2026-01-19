@@ -1,4 +1,7 @@
 {
+    "schemes": [
+        "https"
+    ],
     "swagger": "2.0",
     "info": {
         "description": "back-end part for mobile application.",
@@ -10,7 +13,7 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:80",
+    "host": "intruct.com:80",
     "basePath": "/api",
     "paths": {
         "/auth/complete-registration": {

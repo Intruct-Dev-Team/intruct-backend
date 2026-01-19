@@ -733,9 +733,9 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:80",
+	Host:             "intruct.com:80",
 	BasePath:         "/api",
-	Schemes:          []string{},
+	Schemes:          []string{"https"},
 	Title:            "Intruct API",
 	Description:      "back-end part for mobile application.",
 	InfoInstanceName: "swagger",

@@ -207,7 +207,7 @@ definitions:
         example: Smith
         type: string
     type: object
-host: localhost:80
+host: intruct.com:80
 info:
   contact:
     email: ruslanrbb8@gmail.com
@@ -496,6 +496,8 @@ paths:
       summary: Get user profile
       tags:
       - users
+schemes:
+- https
 securityDefinitions:
   BearerAuth:
     in: header
