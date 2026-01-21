@@ -11,7 +11,6 @@ services:
     #   - "127.0.0.1:${SERVER_PORT}:${SERVER_PORT}"
     environment:
       - SERVER_PORT=${SERVER_PORT}
-
       # Database
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_PORT=${POSTGRES_PORT}
@@ -21,13 +20,11 @@ services:
       - POSTGRES_SSLMODE=${POSTGRES_SSLMODE}
       - IS_INIT_DB=${IS_INIT_DB}
       - MIGRATIONS_PATH=${MIGRATIONS_PATH}
-      
       # Other
       - SUPABASE_HOST=${SUPABASE_HOST}
       - SUPABASE_USE_SSL=${SUPABASE_USE_SSL}
       - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
       - SUPABASE_BUCKET=${SUPABASE_BUCKET}
-
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - N8N_API_INTERNAL=http://n8n:5678
     networks:
@@ -39,41 +36,24 @@ services:
     container_name: nginx_proxy
     ports:
         - "80:80"
-      # - "443:443"  # for HTTPS
+        - "443:443"  # for HTTPS
     volumes:
-      - ./conf/nginx.conf:/etc/nginx/nginx.conf:ro
-      # - ./ssl:/etc/nginx/ssl:ro  # for SSL sertificates
+        - ./conf/nginx.conf:/etc/nginx/nginx.conf:ro
+        - ./certbot/conf:/etc/letsencrypt:ro
+        - ./certbot/www:/var/www/certbot:ro
     networks:
       - local_network
     depends_on:
       - app
+      - n8n
     restart: always
 
   n8n:
     image: n8nio/n8n:latest
     container_name: n8n_main
-    ports:
-      - "127.0.0.1:5678:5678" # access to n8n localhost:5678
     env_file:
       - path: ./.env.n8n
         required: true
-    # environment:
-    #   - N8N_HOST=localhost
-    #   - N8N_PORT=5678
-    #   - N8N_PROTOCOL=http
-
-    #   - WEBHOOK_URL=http://localhost:5678/
-      
-    #   - DB_TYPE=postgresdb
-    #   - DB_POSTGRESDB_HOST=...
-    #   - DB_POSTGRESDB_PORT=5432
-    #   - DB_POSTGRESDB_DATABASE=postgres
-    #   - DB_POSTGRESDB_USER=...
-    #   - DB_POSTGRESDB_PASSWORD=...
-    #   - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false
-      
-    #   - GENERIC_TIMEZONE=Europe/Moscow
-    #   - N8N_ENCRYPTION_KEY=...
     volumes:
       - ./n8n_data:/home/node/.n8n
     networks:

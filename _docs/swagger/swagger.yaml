@@ -207,7 +207,7 @@ definitions:
         example: Smith
         type: string
     type: object
-host: intruct.com:80
+host: intruct.com
 info:
   contact:
     email: ruslanrbb8@gmail.com

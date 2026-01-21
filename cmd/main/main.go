@@ -21,7 +21,7 @@ import (
 // @contact.url    https://t.me/Ruslan20007
 // @contact.email  ruslanrbb8@gmail.com
 
-// @host         intruct.com:80
+// @host         intruct.com
 // @BasePath     /api
 // @schemes https
 
