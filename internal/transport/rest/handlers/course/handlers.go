@@ -19,6 +19,7 @@ type CourseService interface {
 	UploadCourseContent(ctx context.Context, course *entities.Course) error
 	PublishCourse(ctx context.Context, courseID int, userID int) error
 	GetCourseList(ctx context.Context, userID int, inMine bool) ([]*entities.Course, error)
+	GetCourse(ctx context.Context, courseID int, userID int) (*entities.Course, error)
 }
 
 type N8NService interface {
@@ -51,6 +52,7 @@ func (h *CourseHandlers) SetupCourseRoutes(router *chi.Mux, jwtAuthMiddleware fu
 		r.Use(jwtAuthMiddleware)
 		r.Use(systemAuthMiddleware)
 		r.Get(ListCoursesRoute, h.ListCourses())
+		r.Get(GetCourseRoute, h.GetCourse())
 		r.Put(PublishCourseRoute, h.PublishCourse())
 	})
 	coursesRouter.Patch(UploadCourseRoute, h.UploadCourseContent())

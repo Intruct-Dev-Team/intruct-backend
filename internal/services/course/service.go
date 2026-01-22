@@ -25,6 +25,8 @@ type Repository interface {
 	GetCourseIDsFromUserProgress(ctx context.Context, userID int) ([]int, error)
 
 	GetUsersCourseProgressions(ctx context.Context, userID int) ([]*entities.CourseProgression, error)
+	GetModulesWithLessonsByCourseID(ctx context.Context, courseID int) ([]*entities.Module, error)
+	GetCourseProgressionByUserAndCourse(ctx context.Context, userID int, courseID int) (*entities.CourseProgression, error)
 }
 
 type CourseService struct {

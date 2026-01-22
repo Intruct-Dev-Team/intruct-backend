@@ -16,6 +16,8 @@ var (
 	ErrorCourseAlreadyPublished = errors.New("course already published")
 	ErrorNotCourseOwner         = errors.New("user is not the owner of the course")
 
+	ErrorForbidden = errors.New("access is forbidden")
+
 // ErrorUserIsNotTeacher = errors.New("user is not a teacher")
 
 // ErrorTeacherExists   = errors.New("teacher already exists")
