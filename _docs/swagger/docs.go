@@ -205,6 +205,70 @@ const docTemplate = `{
                 }
             }
         },
+        "/courses/{course_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get course details including modules and lessons structure\nPrerequisites: User must be authenticated. Course must be published or user must be the owner",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "Get course",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "course_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/course.getCourseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid course ID",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication required or user not registered",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "403": {
+                        "description": "Access forbidden - course not published",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "404": {
+                        "description": "Course not found",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    }
+                }
+            }
+        },
         "/courses/{course_id}/publish": {
             "put": {
                 "security": [
@@ -494,6 +558,92 @@ const docTemplate = `{
                 }
             }
         },
+        "course.getCourseResponse": {
+            "description": "getCourseResponse returns course details with modules and lessons",
+            "type": "object",
+            "properties": {
+                "author_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Learn Go programming language"
+                },
+                "finished_lessons": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "is_in_mine": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "is_mine": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "is_public": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "lessons_number": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "modules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/course.moduleItem"
+                    }
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Introduction to Go"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
+                }
+            }
+        },
+        "course.lessonItem": {
+            "description": "lessonItem represents a lesson in the module",
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Learn about basic data types"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "serial_number": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Variables and Types"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
+                }
+            }
+        },
         "course.listCoursesResponse": {
             "description": "listCoursesResponse returns list of courses",
             "type": "object",
@@ -503,6 +653,42 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/course.courseItem"
                     }
+                }
+            }
+        },
+        "course.moduleItem": {
+            "description": "moduleItem represents a module in the course",
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Introduction to the basics"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "lessons": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/course.lessonItem"
+                    }
+                },
+                "serial_number": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Getting Started"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
                 }
             }
         },

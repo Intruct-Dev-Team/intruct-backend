@@ -44,6 +44,69 @@ definitions:
         example: 1
         type: integer
     type: object
+  course.getCourseResponse:
+    description: getCourseResponse returns course details with modules and lessons
+    properties:
+      author_id:
+        example: 1
+        type: integer
+      created_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+      description:
+        example: Learn Go programming language
+        type: string
+      finished_lessons:
+        example: 5
+        type: integer
+      id:
+        example: 1
+        type: integer
+      is_in_mine:
+        example: false
+        type: boolean
+      is_mine:
+        example: false
+        type: boolean
+      is_public:
+        example: true
+        type: boolean
+      lessons_number:
+        example: 10
+        type: integer
+      modules:
+        items:
+          $ref: '#/definitions/course.moduleItem'
+        type: array
+      title:
+        example: Introduction to Go
+        type: string
+      updated_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+    type: object
+  course.lessonItem:
+    description: lessonItem represents a lesson in the module
+    properties:
+      created_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+      description:
+        example: Learn about basic data types
+        type: string
+      id:
+        example: 1
+        type: integer
+      serial_number:
+        example: 1
+        type: integer
+      title:
+        example: Variables and Types
+        type: string
+      updated_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+    type: object
   course.listCoursesResponse:
     description: listCoursesResponse returns list of courses
     properties:
@@ -51,6 +114,32 @@ definitions:
         items:
           $ref: '#/definitions/course.courseItem'
         type: array
+    type: object
+  course.moduleItem:
+    description: moduleItem represents a module in the course
+    properties:
+      created_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+      description:
+        example: Introduction to the basics
+        type: string
+      id:
+        example: 1
+        type: integer
+      lessons:
+        items:
+          $ref: '#/definitions/course.lessonItem'
+        type: array
+      serial_number:
+        example: 1
+        type: integer
+      title:
+        example: Getting Started
+        type: string
+      updated_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
     type: object
   course.uploadCourseRequest:
     description: uploadCourseRequest contains processed course content from n8n
@@ -341,6 +430,49 @@ paths:
       security:
       - BearerAuth: []
       summary: List courses
+      tags:
+      - course
+  /courses/{course_id}:
+    get:
+      description: |-
+        Get course details including modules and lessons structure
+        Prerequisites: User must be authenticated. Course must be published or user must be the owner
+      parameters:
+      - description: Course ID
+        in: path
+        name: course_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/course.getCourseResponse'
+        "400":
+          description: Invalid course ID
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "401":
+          description: Authentication required or user not registered
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "403":
+          description: Access forbidden - course not published
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      security:
+      - BearerAuth: []
+      summary: Get course
       tags:
       - course
   /courses/{course_id}/publish:
