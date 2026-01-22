@@ -26,7 +26,7 @@ services:
       - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
       - SUPABASE_BUCKET=${SUPABASE_BUCKET}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - N8N_API_INTERNAL=http://n8n:5678
+      - N8N_API_INTERNAL=http://n8n_main:5678
     networks:
       - local_network
     restart: unless-stopped
