@@ -24,5 +24,5 @@ func NewLanguageHandlers(languageService LanguageService, log *zap.Logger) *Lang
 }
 
 func (h *LanguageHandlers) SetupLanguageRoutes(router *chi.Mux) {
-	router.Get(GetLanguageListRoute, h.GetLanguageList())
+	router.Get(getLanguageListRoute, h.GetLanguageList())
 }

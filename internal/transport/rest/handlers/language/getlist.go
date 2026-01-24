@@ -6,7 +6,7 @@ import (
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest/httputils"
 )
 
-const GetLanguageListRoute = "/languages"
+const getLanguageListRoute = "/languages"
 
 // GetLanguageList returns http.HandlerFunc
 // @Summary Get languages

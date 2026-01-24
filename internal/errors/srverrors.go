@@ -6,8 +6,9 @@ var (
 	ErrorUnavailableOperationState  = errors.New("unavailable operation for this state")
 	ErrorUnavailableStateTransition = errors.New("unavailable such state transition")
 
-	ErrorUserExists = errors.New("user already exists")
+	ErrorForbidden = errors.New("access is forbidden")
 
+	ErrorUserExists   = errors.New("user already exists")
 	ErrorUserNotFound = errors.New("user not found")
 
 	ErrorLanguageNotFound       = errors.New("language not found")
@@ -16,7 +17,7 @@ var (
 	ErrorCourseAlreadyPublished = errors.New("course already published")
 	ErrorNotCourseOwner         = errors.New("user is not the owner of the course")
 
-	ErrorForbidden = errors.New("access is forbidden")
+	ErrorLessonNotFound = errors.New("lesson not found")
 
 // ErrorUserIsNotTeacher = errors.New("user is not a teacher")
 
@@ -38,7 +39,6 @@ var (
 
 // ErrorStudentAndTeacherSame     = errors.New("student and teacher the same person")
 // ErrorLessonTimeBooked          = errors.New("lesson time already booked")
-// ErrorLessonNotFound            = errors.New("lesson not found")
 // ErrorNotRelatedUserToLesson    = errors.New("user no related to this lesson")
 // ErrorNotRelatedTeacherToLesson = errors.New("teacher no related to this lesson")
 // ErrorFinishedLessonNotFound    = errors.New("finished lesson not found")

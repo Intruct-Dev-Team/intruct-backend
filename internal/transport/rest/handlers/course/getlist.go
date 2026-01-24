@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const ListCoursesRoute = "/"
+const listCoursesRoute = "/"
 
 // ListCourses returns list of courses
 // @Summary      List courses

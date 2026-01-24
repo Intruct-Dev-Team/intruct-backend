@@ -51,9 +51,9 @@ func (h *CourseHandlers) SetupCourseRoutes(router *chi.Mux, jwtAuthMiddleware fu
 	coursesRouter.Group(func(r chi.Router) {
 		r.Use(jwtAuthMiddleware)
 		r.Use(systemAuthMiddleware)
-		r.Get(ListCoursesRoute, h.ListCourses())
-		r.Get(GetCourseRoute, h.GetCourse())
-		r.Put(PublishCourseRoute, h.PublishCourse())
+		r.Get(listCoursesRoute, h.ListCourses())
+		r.Get(getCourseRoute, h.GetCourse())
+		r.Put(publishCourseRoute, h.PublishCourse())
 	})
 	coursesRouter.Patch(UploadCourseRoute, h.UploadCourseContent())
 

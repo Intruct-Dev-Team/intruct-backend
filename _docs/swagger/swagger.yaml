@@ -243,6 +243,75 @@ definitions:
           type: string
         type: array
     type: object
+  lesson.getLessonResponse:
+    description: getLessonResponse returns lesson details with quizzes and options
+    properties:
+      content:
+        example: |-
+          # Variables in Go
+
+          In Go, variables are...
+        type: string
+      course_id:
+        example: 1
+        type: integer
+      created_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+      description:
+        example: Learn about basic data types
+        type: string
+      id:
+        example: 1
+        type: integer
+      module_id:
+        example: 1
+        type: integer
+      quizzes:
+        items:
+          $ref: '#/definitions/lesson.quizItem'
+        type: array
+      serial_number:
+        example: 1
+        type: integer
+      title:
+        example: Variables and Types
+        type: string
+      updated_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+    type: object
+  lesson.quizItem:
+    description: quizItem represents a quiz in the lesson
+    properties:
+      correct_index:
+        example: 0
+        type: integer
+      created_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+      id:
+        example: 1
+        type: integer
+      options:
+        example:
+        - "0"
+        - "null"
+        - undefined
+        - nil
+        items:
+          type: string
+        type: array
+      question:
+        example: What is the zero value of an int?
+        type: string
+      serial_number:
+        example: 1
+        type: integer
+      updated_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+    type: object
   user.completeRegistrationRequest:
     description: completeRegistrationRequest to complete user registration.
     properties:
@@ -577,6 +646,49 @@ paths:
       summary: Get languages
       tags:
       - languages
+  /lessons/{lesson_id}:
+    get:
+      description: |-
+        Get lesson details including content and quizzes with options
+        Prerequisites: User must be authenticated. User must have access to the course and have reached this lesson in progression
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lesson_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/lesson.getLessonResponse'
+        "400":
+          description: Invalid lesson ID
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "401":
+          description: Authentication required or user not registered
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "403":
+          description: Access forbidden - lesson locked or course access denied
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "404":
+          description: Lesson not found
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      security:
+      - BearerAuth: []
+      summary: Get lesson
+      tags:
+      - lesson
   /user/profile:
     get:
       description: 'Get info about user by jwt token (in Authorization enter: Bearer
