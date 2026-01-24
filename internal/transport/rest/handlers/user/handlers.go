@@ -41,12 +41,12 @@ func (h *UserHandlers) SetupUserRoutes(router *chi.Mux, jwtAuthMiddleware func(h
 	authRouter.Group(func(r chi.Router) {
 		r.Use(jwtAuthMiddleware)
 
-		r.Post(CompliteRegistrationRoute, h.CompleteRegistration())
+		r.Post(compliteRegistrationRoute, h.CompleteRegistration())
 	})
 
 	router.Mount(authRoute, authRouter)
 
-	router.Get(path.Join(usersRoute, GetPublicRoute), h.GetUserPublic())
+	router.Get(path.Join(usersRoute, getPublicRoute), h.GetUserPublic())
 
 	router.Group(func(r chi.Router) {
 		r.Use(jwtAuthMiddleware)

@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	GetPublicRoute    = "/{id}/profile"
+	getPublicRoute    = "/{id}/profile"
 	getProtectedRoute = "/profile"
 )
 

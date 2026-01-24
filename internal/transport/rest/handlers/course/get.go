@@ -13,7 +13,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const GetCourseRoute = "/{course_id}"
+const getCourseRoute = "/{course_id}"
 
 // GetCourse returns course details with modules and lessons
 // @Summary      Get course

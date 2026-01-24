@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const PublishCourseRoute = "/{course_id}/publish"
+const publishCourseRoute = "/{course_id}/publish"
 
 // PublishCourse publishes a course
 // @Summary      Publish course

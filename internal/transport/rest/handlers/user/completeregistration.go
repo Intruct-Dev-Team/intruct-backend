@@ -16,7 +16,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const CompliteRegistrationRoute = "/complete-registration"
+const compliteRegistrationRoute = "/complete-registration"
 
 // CompleteRegistration completes user registration after External auth
 // @Summary      Complete registration
