@@ -10,6 +10,7 @@ import (
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/repository"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/course"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/language"
+	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/lesson"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/n8n"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/services/user"
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest"
@@ -33,11 +34,11 @@ type Services struct {
 	user.UserService
 	language.LanguageService
 	course.CourseService
+	lesson.LessonService
 	// 	kratos.KratosService
 	// 	teacher.TeacherService
 	// 	schedule.ScheduleService
 	// 	review.ReviewService
-	// 	lesson.LessonService
 	// 	image.ImageService
 	// 	category.CategoryService
 	// 	skill.SkillService
@@ -51,11 +52,11 @@ func NewServices(
 	userService *user.UserService,
 	languageService *language.LanguageService,
 	courseService *course.CourseService,
+	lessonService *lesson.LessonService,
 	// kratosService *kratos.KratosService,
 	// teacherService *teacher.TeacherService,
 	// scheduleService *schedule.ScheduleService,
 	// reviewService *review.ReviewService,
-	// lessonService *lesson.LessonService,
 	// imageService *image.ImageService,
 	// categoryService *category.CategoryService,
 	// skillService *skill.SkillService,
@@ -68,11 +69,11 @@ func NewServices(
 		UserService:     *userService,
 		LanguageService: *languageService,
 		CourseService:   *courseService,
+		LessonService:   *lessonService,
 		// 		KratosService:    *kratosService,
 		// 		TeacherService:   *teacherService,
 		// 		ScheduleService:  *scheduleService,
 		// 		ReviewService:    *reviewService,
-		// 		LessonService:    *lessonService,
 		// 		ImageService:     *imageService,
 		// 		CategoryService:  *categoryService,
 		// 		SkillService:     *skillService,
@@ -123,10 +124,10 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 	userService := user.NewService(repo, fileService)
 	languageService := language.NewService(repo)
 	courseService := course.NewService(repo)
+	lessonService := lesson.NewService(repo)
 	// teacherService := teacher.NewService(repo)
 	// scheduleService := schedule.NewService(repo)
 	// reviewService := review.NewService(repo)
-	// lessonService := lesson.NewService(repo, liveKitService)
 	// imageService := image.NewService(minioService)
 	// categoryService := category.NewService(repo)
 	// skillService := skill.NewService(repo)
@@ -138,12 +139,12 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 		userService,
 		languageService,
 		courseService,
+		lessonService,
 	// 	kratosService,
 	// 	jwtService,
 	// 	teacherService,
 	// 	scheduleService,
 	// 	reviewService,
-	// 	lessonService,
 	// 	imageService,
 	// 	categoryService,
 	// 	skillService,

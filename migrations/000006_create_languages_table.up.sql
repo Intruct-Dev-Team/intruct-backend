@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS public.languages(
-       language_id SERIAL PRIMARY KEY NOT NULL,
+       language_id SERIAL PRIMARY KEY,
        name TEXT NOT NULL,
        eng_name TEXT NOT NULL,
-       iso_code TEXT NOT NULL,
+       iso_code TEXT NOT NULL UNIQUE,
        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-INSERT INTO public.languages (id, name, eng_name, iso_code)
+INSERT INTO public.languages (language_id, name, eng_name, iso_code)
 VALUES
     (1, 'English', 'English', 'en'),
     (2, 'Srpski', 'Serbian', 'sr'),

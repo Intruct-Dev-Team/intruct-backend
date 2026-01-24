@@ -412,6 +412,70 @@
                 }
             }
         },
+        "/lessons/{lesson_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get lesson details including content and quizzes with options\nPrerequisites: User must be authenticated. User must have access to the course and have reached this lesson in progression",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lesson"
+                ],
+                "summary": "Get lesson",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Lesson ID",
+                        "name": "lesson_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/lesson.getLessonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid lesson ID",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication required or user not registered",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "403": {
+                        "description": "Access forbidden - lesson locked or course access denied",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "404": {
+                        "description": "Lesson not found",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    }
+                }
+            }
+        },
         "/user/profile": {
             "get": {
                 "security": [
@@ -825,6 +889,96 @@
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "lesson.getLessonResponse": {
+            "description": "getLessonResponse returns lesson details with quizzes and options",
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "example": "# Variables in Go\n\nIn Go, variables are..."
+                },
+                "course_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Learn about basic data types"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "module_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "quizzes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lesson.quizItem"
+                    }
+                },
+                "serial_number": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Variables and Types"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
+                }
+            }
+        },
+        "lesson.quizItem": {
+            "description": "quizItem represents a quiz in the lesson",
+            "type": "object",
+            "properties": {
+                "correct_index": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "0",
+                        "null",
+                        "undefined",
+                        "nil"
+                    ]
+                },
+                "question": {
+                    "type": "string",
+                    "example": "What is the zero value of an int?"
+                },
+                "serial_number": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
                 }
             }
         },
