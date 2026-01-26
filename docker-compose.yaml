@@ -26,7 +26,7 @@ services:
       - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
       - SUPABASE_BUCKET=${SUPABASE_BUCKET}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - N8N_API_INTERNAL=http://n8n_main:5678
+      - N8N_API_INTERNAL=http://n8n_webhook:5678
     networks:
       - local_network
     restart: unless-stopped
@@ -48,16 +48,69 @@ services:
       - n8n
     restart: always
 
+  redis:
+    image: redis:6-alpine
+    container_name: n8n_redis
+    networks:
+      - local_network
+    restart: always
+
   n8n:
     image: n8nio/n8n:latest
     container_name: n8n_main
     env_file:
       - path: ./.env.n8n
         required: true
+    environment:
+      - EXECUTIONS_MODE=queue
+      - N8N_MODE=queue
+      - QUEUE_BULL_REDIS_HOST=redis
+      - N8N_DISABLE_PRODUCTION_MAIN_PROCESS=true
     volumes:
       - ./n8n_data:/home/node/.n8n
     networks:
       - local_network
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  n8n_worker:
+    image: n8nio/n8n:latest
+    container_name: n8n_worker
+    command: worker --concurrency=1
+    env_file:
+      - path: ./.env.n8n
+        required: true
+    environment:
+      - EXECUTIONS_MODE=queue
+      - N8N_MODE=queue
+      - QUEUE_BULL_REDIS_HOST=redis
+      - N8N_WORKERS_CONCURRENCY=1
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+    networks:
+      - local_network
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  n8n_webhook:
+    image: n8nio/n8n:latest
+    container_name: n8n_webhook
+    command: webhook
+    env_file:
+      - path: ./.env.n8n
+        required: true
+    environment:
+      - EXECUTIONS_MODE=queue
+      - N8N_MODE=queue
+      - QUEUE_BULL_REDIS_HOST=redis
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+    networks:
+      - local_network
+    depends_on:
+      - redis
     restart: unless-stopped
 
 networks:
