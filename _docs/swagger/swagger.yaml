@@ -689,6 +689,47 @@ paths:
       summary: Get lesson
       tags:
       - lesson
+  /lessons/{lesson_id}/finish:
+    put:
+      description: |-
+        Mark lesson as completed and advance user progress in the course
+        Prerequisites: User must be authenticated. User must have access to the lesson and not skipping lessons
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lesson_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid lesson ID
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "401":
+          description: Authentication required or user not registered
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "403":
+          description: Access forbidden - lesson locked or course access denied
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "404":
+          description: Lesson not found
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      security:
+      - BearerAuth: []
+      summary: Finish lesson
+      tags:
+      - lesson
   /user/profile:
     get:
       description: 'Get info about user by jwt token (in Authorization enter: Bearer

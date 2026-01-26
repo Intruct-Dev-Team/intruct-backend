@@ -102,3 +102,54 @@ func (r *Repository) GetCourseIDsFromUserProgress(ctx context.Context, userID in
 
 	return courseIDs, nil
 }
+
+func (r *Repository) CreateCourseProgression(ctx context.Context, progression *entities.CourseProgression) error {
+	query, args, err := r.sqlBuilder.
+		Insert("course_progressions").
+		Columns(
+			"user_id",
+			"course_id",
+			"current_lesson_id",
+		).
+		Values(
+			progression.UserID,
+			progression.CourseID,
+			progression.CurrentLessonID,
+		).
+		ToSql()
+
+	if err != nil {
+		return fmt.Errorf("failed to build query: %w", err)
+	}
+
+	_, err = r.db.ExecContext(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("failed to create course progression for user [%d] and course [%d]: %w", progression.UserID, progression.CourseID, err)
+	}
+
+	return nil
+}
+
+func (r *Repository) UpdateCourseProgression(ctx context.Context, userID int, courseID int, newCurrentLessonID int, finishedLessonsCount int, isFinished bool) error {
+	query, args, err := r.sqlBuilder.
+		Update("course_progressions").
+		Set("current_lesson_id", newCurrentLessonID).
+		Set("finished_lessons_count", finishedLessonsCount).
+		Set("is_finished", isFinished).
+		Where(squirrel.Eq{
+			"user_id":   userID,
+			"course_id": courseID,
+		}).
+		ToSql()
+
+	if err != nil {
+		return fmt.Errorf("failed to build query: %w", err)
+	}
+
+	_, err = r.db.ExecContext(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("failed to update course progression for user [%d] and course [%d]: %w", userID, courseID, err)
+	}
+
+	return nil
+}

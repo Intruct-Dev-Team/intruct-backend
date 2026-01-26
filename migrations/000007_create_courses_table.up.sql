@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS public.courses(
        course_id SERIAL PRIMARY KEY NOT NULL,
        owner_id INTEGER NOT NULL REFERENCES users(user_id),
-       title TEXT UNIQUE NOT NULL,
+       title TEXT NOT NULL,
        description TEXT NOT NULL DEFAULT '',
        lessons_count INTEGER NOT NULL DEFAULT 0,
        language_id INTEGER NOT NULL REFERENCES languages(language_id),

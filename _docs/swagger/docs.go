@@ -482,6 +482,67 @@ const docTemplate = `{
                 }
             }
         },
+        "/lessons/{lesson_id}/finish": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mark lesson as completed and advance user progress in the course\nPrerequisites: User must be authenticated. User must have access to the lesson and not skipping lessons",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lesson"
+                ],
+                "summary": "Finish lesson",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Lesson ID",
+                        "name": "lesson_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Invalid lesson ID",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication required or user not registered",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "403": {
+                        "description": "Access forbidden - lesson locked or course access denied",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "404": {
+                        "description": "Lesson not found",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    }
+                }
+            }
+        },
         "/user/profile": {
             "get": {
                 "security": [
