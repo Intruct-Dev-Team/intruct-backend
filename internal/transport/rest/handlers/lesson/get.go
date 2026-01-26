@@ -53,6 +53,8 @@ func (h *LessonHandlers) GetLesson() http.HandlerFunc {
 				httputils.RespondWith401(w, err.Error(), h.log)
 			case errors.Is(err, serviceErrs.ErrorLessonNotFound):
 				httputils.RespondWith404(w, err.Error(), h.log)
+			case errors.Is(err, serviceErrs.ErrorLessonNotReached):
+				httputils.RespondWith403(w, err.Error(), h.log)
 			case errors.Is(err, serviceErrs.ErrorForbidden):
 				httputils.RespondWith403(w, err.Error(), h.log)
 			default:

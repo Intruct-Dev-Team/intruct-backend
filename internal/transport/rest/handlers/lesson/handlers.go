@@ -15,6 +15,7 @@ const (
 
 type LessonService interface {
 	GetLesson(ctx context.Context, lessonID int, userID int) (*entities.Lesson, error)
+	FinishLesson(ctx context.Context, lessonID int, userID int) error
 }
 
 type LessonHandlers struct {
@@ -35,6 +36,7 @@ func (h *LessonHandlers) SetupLessonRoutes(router *chi.Mux, jwtAuthMiddleware fu
 		r.Use(jwtAuthMiddleware)
 		r.Use(systemAuthMiddleware)
 		r.Get(getLessonRoute, h.GetLesson())
+		r.Put(finishLessonRoute, h.FinishLesson())
 	})
 
 	router.Mount(lessonsRoute, lessonsRouter)

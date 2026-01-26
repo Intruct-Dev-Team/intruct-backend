@@ -17,7 +17,9 @@ var (
 	ErrorCourseAlreadyPublished = errors.New("course already published")
 	ErrorNotCourseOwner         = errors.New("user is not the owner of the course")
 
-	ErrorLessonNotFound = errors.New("lesson not found")
+	ErrorLessonNotFound   = errors.New("lesson not found")
+	ErrorLessonNotReached = errors.New("previous lessons were not finished")
+	ErrorLessonFinished   = errors.New("lesson is already finished")
 
 // ErrorUserIsNotTeacher = errors.New("user is not a teacher")
 
