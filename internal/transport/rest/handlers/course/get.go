@@ -78,6 +78,7 @@ func (h *CourseHandlers) GetCourse() http.HandlerFunc {
 			CreatedAt:       course.CreatedAt,
 			UpdatedAt:       course.UpdatedAt,
 			AuthorID:        course.OwnerID,
+			State:           course.State,
 			IsPublic:        course.IsPublic,
 			IsMine:          course.OwnerID == userID,
 			IsInMine:        isInMine,
@@ -123,6 +124,7 @@ type getCourseResponse struct {
 	CreatedAt       time.Time    `json:"created_at"       example:"2022-09-09T10:10:10Z"`
 	UpdatedAt       time.Time    `json:"updated_at"       example:"2022-09-09T10:10:10Z"`
 	AuthorID        int          `json:"author_id"        example:"1"`
+	State           string       `json:"state"            example:"published"`
 	IsPublic        bool         `json:"is_public"        example:"true"`
 	IsMine          bool         `json:"is_mine"          example:"false"`
 	IsInMine        bool         `json:"is_in_mine"       example:"false"`

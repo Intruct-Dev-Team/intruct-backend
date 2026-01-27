@@ -724,6 +724,10 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 10
                 },
+                "state": {
+                    "type": "string",
+                    "example": "published"
+                },
                 "title": {
                     "type": "string",
                     "example": "Introduction to Go"
@@ -789,6 +793,10 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/course.moduleItem"
                     }
+                },
+                "state": {
+                    "type": "string",
+                    "example": "published"
                 },
                 "title": {
                     "type": "string",

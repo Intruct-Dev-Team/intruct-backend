@@ -43,25 +43,6 @@ func (r *Repository) GetStateMachineItemByID(ctx context.Context, id int) (*enti
 	return &stItem, nil
 }
 
-// func (r *Repository) UpdateStateMachineItemState(ctx context.Context, stateMachineItemID, newStateID int) error {
-// 	query, args, err := r.sqlBuilder.
-// 		Update("state_machines_items").
-// 		Set("state_id", newStateID).
-// 		Where(squirrel.Eq{"item_id": stateMachineItemID}).
-// 		ToSql()
-
-// 	if err != nil {
-// 		return fmt.Errorf("failed to build query: %w", err)
-// 	}
-
-// 	_, err = r.db.ExecContext(ctx, query, args...)
-// 	if err != nil {
-// 		return fmt.Errorf("failed to update state machine item: %w", err)
-// 	}
-
-// 	return nil
-// }
-
 // func (r *Repository) GetStateByID(ctx context.Context, id int) (*entities.State, error) {
 // 	query, args, err := r.sqlBuilder.
 // 		Select(
