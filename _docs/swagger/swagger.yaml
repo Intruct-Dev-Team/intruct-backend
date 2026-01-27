@@ -1,5 +1,14 @@
 basePath: /api
 definitions:
+  course.addRateRequest:
+    description: addRateRequest body of request
+    properties:
+      rating:
+        example: 5
+        type: integer
+    required:
+    - rating
+    type: object
   course.courseItem:
     description: courseItem represents a course in the list
     properties:
@@ -86,6 +95,16 @@ definitions:
         type: string
       title:
         example: Introduction to Go
+        type: string
+      updated_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+    type: object
+  course.getCourseStateResponse:
+    description: getCourseStateResponse returns course state
+    properties:
+      state:
+        example: in creation
         type: string
       updated_at:
         example: "2022-09-09T10:10:10Z"
@@ -638,6 +657,98 @@ paths:
       security:
       - BearerAuth: []
       summary: Publish course
+      tags:
+      - course
+  /courses/{course_id}/rate:
+    post:
+      description: |-
+        Add rating to a course form 1 to 5 grate
+        Prerequisites: User must be authenticated and must learn the course
+        Course must exist
+      parameters:
+      - description: Course ID
+        in: path
+        name: course_id
+        required: true
+        type: integer
+      - description: rating
+        in: body
+        name: addRateRequest
+        required: true
+        schema:
+          $ref: '#/definitions/course.addRateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Invalid course ID or body
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "401":
+          description: Authentication required
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "403":
+          description: User is not the 'student' of the course
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      security:
+      - BearerAuth: []
+      summary: Rate course
+      tags:
+      - course
+  /courses/{course_id}/state:
+    get:
+      description: |-
+        Get a course state return course state
+        Prerequisites: User must be authenticated and must be the owner of the course
+        Course must exist
+      parameters:
+      - description: Course ID
+        in: path
+        name: course_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/course.getCourseStateResponse'
+        "400":
+          description: Invalid course ID
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "401":
+          description: Authentication required
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "403":
+          description: User is not the owner of the course
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      security:
+      - BearerAuth: []
+      summary: Get course state
       tags:
       - course
   /courses/{course_id}/upload:

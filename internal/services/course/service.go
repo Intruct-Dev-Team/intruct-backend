@@ -10,6 +10,7 @@ type Repository interface {
 	IsUserExistsByID(ctx context.Context, id int) (bool, error)
 	GetLanguageIDByName(ctx context.Context, languageName string) (int, error)
 	IsCourseExistsByOwnerAndTitle(ctx context.Context, ownerID int, title string) (bool, error)
+	IsCourseExistsByID(ctx context.Context, courseID int) (bool, error)
 	GetCourseByID(ctx context.Context, id int) (*entities.Course, error)
 	CreateCourse(ctx context.Context, course *entities.Course) (int, error)
 	ImplementCourse(ctx context.Context, course *entities.Course, nextStateID int) error
@@ -28,6 +29,8 @@ type Repository interface {
 	GetUsersCourseProgressions(ctx context.Context, userID int) ([]*entities.CourseProgression, error)
 	GetModulesWithLessonsByCourseID(ctx context.Context, courseID int) ([]*entities.Module, error)
 	GetCourseProgressionByUserAndCourse(ctx context.Context, userID int, courseID int) (*entities.CourseProgression, error)
+
+	CreateRating(ctx context.Context, rating *entities.Rating) error
 }
 
 type CourseService struct {
