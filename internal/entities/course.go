@@ -16,6 +16,7 @@ type Course struct {
 	IsPublic           bool       `db:"is_public"`
 
 	Language          string             `db:"language"`
+	State             string             `db:"state"`
 	Modules           []*Module          `db:"-"`
 	StateMachineName  StateMachineName   `db:"-"`
 	StateMachineItem  *StateMachineItem  `db:"-"`

@@ -30,6 +30,9 @@ definitions:
       lessons_number:
         example: 10
         type: integer
+      state:
+        example: published
+        type: string
       title:
         example: Introduction to Go
         type: string
@@ -78,6 +81,9 @@ definitions:
         items:
           $ref: '#/definitions/course.moduleItem'
         type: array
+      state:
+        example: published
+        type: string
       title:
         example: Introduction to Go
         type: string

@@ -10,7 +10,6 @@ import (
 	internalErrs "github.com/Intruct-Dev-Team/intruct-backend/internal/errors"
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
-	"github.com/lib/pq"
 )
 
 func (r *Repository) IsCourseExistsByOwnerAndTitle(ctx context.Context, ownerID int, title string) (bool, error) {
@@ -109,9 +108,12 @@ func (r *Repository) GetCourseByID(ctx context.Context, id int) (*entities.Cours
 			"c.updated_at",
 			"c.is_public",
 			"l.name AS language",
+			"s.name as state",
 		).
 		From("courses c").
-		LeftJoin("languages l ON c.language_id = l.language_id").
+		InnerJoin("languages l ON c.language_id = l.language_id"). // joins compromise block
+		InnerJoin("state_machines_items i ON c.state_machine_item_id = i.item_id").
+		InnerJoin("states s ON i.state_id = s.state_id").
 		Where(squirrel.Eq{"c.course_id": id}).
 		Where(squirrel.Eq{"c.deleted_at": nil}).
 		ToSql()
@@ -175,12 +177,12 @@ func (r *Repository) CreateCourse(ctx context.Context, course *entities.Course) 
 	var courseID int
 
 	if err := tx.GetContext(ctx, &courseID, query, args...); err != nil {
-		var pqErr *pq.Error
-		if errors.As(err, &pqErr) {
-			if pqErr.Code == "23505" {
-				return 0, internalErrs.ErrorNonUniqueData
-			}
-		}
+		// var pqErr *pq.Error
+		// if errors.As(err, &pqErr) {
+		// 	if pqErr.Code == "23505" {
+		// 		return 0, internalErrs.ErrorNonUniqueData
+		// 	}
+		// }
 
 		return 0, fmt.Errorf("failed to execute insert: %w", err)
 	}
