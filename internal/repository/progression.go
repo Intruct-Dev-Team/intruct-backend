@@ -12,7 +12,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func (r *Repository) GetUsersCourseProgressions(ctx context.Context, userID int) ([]*entities.CourseProgression, error) {
+func (r *Repository) GetUserCourseProgressions(ctx context.Context, userID int) ([]*entities.CourseProgression, error) {
 	query, args, err := r.sqlBuilder.
 		Select(
 			"user_id",

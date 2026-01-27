@@ -48,5 +48,12 @@ func (s *CourseService) GetCourse(ctx context.Context, courseID int, userID int)
 		course.CourseProgression = progression
 	}
 
+	// get statistic
+	stat, err := s.repo.GetCourseStatisticByCourseID(ctx, courseID)
+	if err != nil || stat == nil {
+		return nil, fmt.Errorf("failed to get course statistic: %w", err)
+	}
+	course.Statistic = *stat
+
 	return course, nil
 }

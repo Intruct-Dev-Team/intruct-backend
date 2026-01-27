@@ -21,4 +21,12 @@ type Course struct {
 	StateMachineName  StateMachineName   `db:"-"`
 	StateMachineItem  *StateMachineItem  `db:"-"`
 	CourseProgression *CourseProgression `db:"-"`
+	Statistic         CourseStatistic    `db:"-"`
+}
+
+type CourseStatistic struct {
+	CourseID      int     `db:"course_id"`
+	StudentsCount int     `db:"students_count"`
+	AverageRating float64 `db:"average_rating"`
+	RatingsCount  int     `db:"ratings_count"`
 }

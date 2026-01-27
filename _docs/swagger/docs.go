@@ -839,6 +839,10 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 1
                 },
+                "average_rating": {
+                    "type": "number",
+                    "example": 5
+                },
                 "created_at": {
                     "type": "string",
                     "example": "2022-09-09T10:10:10Z"
@@ -871,9 +875,17 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 10
                 },
+                "ratings_count": {
+                    "type": "integer",
+                    "example": 1
+                },
                 "state": {
                     "type": "string",
                     "example": "published"
+                },
+                "students_count": {
+                    "type": "integer",
+                    "example": 0
                 },
                 "title": {
                     "type": "string",
@@ -902,6 +914,10 @@ const docTemplate = `{
                 "author_id": {
                     "type": "integer",
                     "example": 1
+                },
+                "average_rating": {
+                    "type": "number",
+                    "example": 5
                 },
                 "created_at": {
                     "type": "string",
@@ -941,9 +957,17 @@ const docTemplate = `{
                         "$ref": "#/definitions/course.moduleItem"
                     }
                 },
+                "ratings_count": {
+                    "type": "integer",
+                    "example": 1
+                },
                 "state": {
                     "type": "string",
                     "example": "published"
+                },
+                "students_count": {
+                    "type": "integer",
+                    "example": 0
                 },
                 "title": {
                     "type": "string",
