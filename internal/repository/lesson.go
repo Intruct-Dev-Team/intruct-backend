@@ -190,12 +190,19 @@ func (r *Repository) insertLesson(ctx context.Context, tx *sqlx.Tx, courseID, mo
 		return 0, fmt.Errorf("failed to build insert lesson query: %w", err)
 	}
 
-	// logger.NewDefault().Info("lesson insert query", zap.String("query", query), zap.Any("args", args))
+	// l := logger.NewDevelopment()
 
 	var lessonID int
 	if err := tx.GetContext(ctx, &lessonID, query, args...); err != nil {
+		// l.Error("failed to insert lesson", zap.Int("course_id", courseID),
+		// 	zap.Int("serial_number", lesson.SerialNumber),
+		// 	zap.String("title", lesson.Title))
 		return 0, fmt.Errorf("failed to execute insert lesson: %w", err)
 	}
+
+	// l.Debug("success to insert lesson", zap.Int("course_id", courseID),
+	// 	zap.Int("serial_number", lesson.SerialNumber),
+	// 	zap.String("title", lesson.Title))
 
 	return lessonID, nil
 }
