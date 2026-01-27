@@ -17,6 +17,8 @@ const listCoursesRoute = "/"
 // ListCourses returns list of courses
 // @Summary      List courses
 // @Description  Get list of courses with optional filter for user's courses
+// @Description  If 'in_mine' filter is TRUE method will return your created courses + courses which you learn
+// @Description  If 'in_mine' filter is FALSE method will return only public courses
 // @Description  Prerequisites: User must be authenticated
 // @Tags         course
 // @Produce      json

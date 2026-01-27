@@ -471,6 +471,8 @@ paths:
     get:
       description: |-
         Get list of courses with optional filter for user's courses
+        If 'in_mine' filter is TRUE method will return your created courses + courses which you learn
+        If 'in_mine' filter is FALSE method will return only public courses
         Prerequisites: User must be authenticated
       parameters:
       - description: Filter user's courses (true/false)

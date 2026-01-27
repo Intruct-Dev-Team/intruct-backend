@@ -11,18 +11,19 @@ import (
 )
 
 func (s *CourseService) GetCourseList(ctx context.Context, userID int, inMine bool) ([]*entities.Course, error) {
-	ids, err := s.repo.GetOwnCourseIDs(ctx, userID)
-	if err != nil && !errors.Is(err, serviceErrs.ErrorSelectEmpty) {
-		return nil, fmt.Errorf("failed to get own course IDs: %w", err)
-	}
-
 	courseMap := make(map[int]*entities.Course)
-	for _, id := range ids {
-		courseMap[id] = nil
-	}
 
 	if inMine {
-		// only my courses + study courses
+		// own courses + study courses
+		ids, err := s.repo.GetOwnCourseIDs(ctx, userID)
+		if err != nil && !errors.Is(err, serviceErrs.ErrorSelectEmpty) {
+			return nil, fmt.Errorf("failed to get own course IDs: %w", err)
+		}
+		for _, id := range ids {
+			courseMap[id] = nil
+		}
+
+		// study courses
 		ids, err = s.repo.GetCourseIDsFromUserProgress(ctx, userID)
 		if err != nil && !errors.Is(err, serviceErrs.ErrorSelectEmpty) {
 			return nil, fmt.Errorf("failed to get study course IDs: %w", err)
@@ -32,8 +33,8 @@ func (s *CourseService) GetCourseList(ctx context.Context, userID int, inMine bo
 		}
 
 	} else {
-		// all courses
-		ids, err = s.repo.GetPublicCourseIDs(ctx)
+		// public courses
+		ids, err := s.repo.GetPublicCourseIDs(ctx)
 		if err != nil && !errors.Is(err, serviceErrs.ErrorSelectEmpty) {
 			return nil, fmt.Errorf("failed to get public course IDs: %w", err)
 		}
@@ -48,7 +49,7 @@ func (s *CourseService) GetCourseList(ctx context.Context, userID int, inMine bo
 
 	// get all needed courses
 	wp := workerpool.NewWorkerPool[entities.Course](5)
-	err = wp.FillMap(ctx, courseMap, s.repo.GetCourseByID)
+	err := wp.FillMap(ctx, courseMap, s.repo.GetCourseByID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get courses by id: %w", err)
 	}

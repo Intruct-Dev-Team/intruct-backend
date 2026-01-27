@@ -155,7 +155,7 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get list of courses with optional filter for user's courses\nPrerequisites: User must be authenticated",
+                "description": "Get list of courses with optional filter for user's courses\nIf 'in_mine' filter is TRUE method will return your created courses + courses which you learn\nIf 'in_mine' filter is FALSE method will return only public courses\nPrerequisites: User must be authenticated",
                 "produces": [
                     "application/json"
                 ],
