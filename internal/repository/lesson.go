@@ -190,12 +190,55 @@ func (r *Repository) insertLesson(ctx context.Context, tx *sqlx.Tx, courseID, mo
 		return 0, fmt.Errorf("failed to build insert lesson query: %w", err)
 	}
 
-	// logger.NewDefault().Info("lesson insert query", zap.String("query", query), zap.Any("args", args))
+	// l := logger.NewDevelopment()
 
 	var lessonID int
 	if err := tx.GetContext(ctx, &lessonID, query, args...); err != nil {
+		// l.Error("failed to insert lesson", zap.Int("course_id", courseID),
+		// 	zap.Int("serial_number", lesson.SerialNumber),
+		// 	zap.String("title", lesson.Title))
 		return 0, fmt.Errorf("failed to execute insert lesson: %w", err)
 	}
 
+	// l.Debug("success to insert lesson", zap.Int("course_id", courseID),
+	// 	zap.Int("serial_number", lesson.SerialNumber),
+	// 	zap.String("title", lesson.Title))
+
 	return lessonID, nil
+}
+
+func (r *Repository) getLessonIDsByCourseID(ctx context.Context, tx *sqlx.Tx, courseID int) ([]int, error) {
+	query, args, err := r.sqlBuilder.
+		Select("lesson_id").
+		From("lessons").
+		Where(squirrel.Eq{"course_id": courseID}).
+		ToSql()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	var lessonIDs []int
+	if err := tx.SelectContext(ctx, &lessonIDs, query, args...); err != nil {
+		return nil, fmt.Errorf("failed to get lesson IDs: %w", err)
+	}
+
+	return lessonIDs, nil
+}
+
+func (r *Repository) deleteLessonsByCourseID(ctx context.Context, tx *sqlx.Tx, courseID int) error {
+	query, args, err := r.sqlBuilder.
+		Delete("lessons").
+		Where(squirrel.Eq{"course_id": courseID}).
+		ToSql()
+
+	if err != nil {
+		return fmt.Errorf("failed to build query: %w", err)
+	}
+
+	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
+		return fmt.Errorf("failed to delete lessons: %w", err)
+	}
+
+	return nil
 }

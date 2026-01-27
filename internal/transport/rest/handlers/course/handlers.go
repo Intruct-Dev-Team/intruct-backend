@@ -20,6 +20,7 @@ type CourseService interface {
 	PublishCourse(ctx context.Context, courseID int, userID int) error
 	GetCourseList(ctx context.Context, userID int, inMine bool) ([]*entities.Course, error)
 	GetCourse(ctx context.Context, courseID int, userID int) (*entities.Course, error)
+	DeleteCourse(ctx context.Context, courseID int, userID int) error
 }
 
 type N8NService interface {
@@ -54,6 +55,7 @@ func (h *CourseHandlers) SetupCourseRoutes(router *chi.Mux, jwtAuthMiddleware fu
 		r.Get(listCoursesRoute, h.ListCourses())
 		r.Get(getCourseRoute, h.GetCourse())
 		r.Put(publishCourseRoute, h.PublishCourse())
+		r.Delete(deleteCourseRoute, h.DeleteCourse())
 	})
 	coursesRouter.Patch(UploadCourseRoute, h.UploadCourseContent())
 

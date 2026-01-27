@@ -48,9 +48,13 @@ func (s *LessonService) GetLesson(ctx context.Context, lessonID int, userID int)
 		}
 	} else {
 		// find current lesson index
+		if progression.CurrentLessonID == nil {
+			return nil, fmt.Errorf("current lesson not set")
+		}
+
 		currentLessonIndex := -1
 		for i, id := range lessonIDs {
-			if id == progression.CurrentLessonID {
+			if id == *progression.CurrentLessonID {
 				currentLessonIndex = i
 				break
 			}

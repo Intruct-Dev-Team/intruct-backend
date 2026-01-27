@@ -161,7 +161,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get list of courses with optional filter for user's courses\nPrerequisites: User must be authenticated",
+                "description": "Get list of courses with optional filter for user's courses\nIf 'in_mine' filter is TRUE method will return your created courses + courses which you learn\nIf 'in_mine' filter is FALSE method will return only public courses\nPrerequisites: User must be authenticated",
                 "produces": [
                     "application/json"
                 ],
@@ -250,6 +250,67 @@ const docTemplate = `{
                     },
                     "403": {
                         "description": "Access forbidden - course not published",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "404": {
+                        "description": "Course not found",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{course_id}/delete": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a course by removing all content (modules, lessons, quizzes) and soft delete course from db\nPrerequisites: User must be authenticated and must be the owner of the course\nCourse must exist",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "Delete course",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "course_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Invalid course ID",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication required",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not the owner of the course",
                         "schema": {
                             "$ref": "#/definitions/httputils.ErrorStruct"
                         }

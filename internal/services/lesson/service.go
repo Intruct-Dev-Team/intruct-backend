@@ -16,7 +16,7 @@ type Repository interface {
 	GetCourseByID(ctx context.Context, courseID int) (*entities.Course, error)
 	GetCourseProgressionByUserAndCourse(ctx context.Context, userID int, courseID int) (*entities.CourseProgression, error)
 	GetAllLessonIDsByCourseIDOrderedBySerial(ctx context.Context, courseID int) ([]int, error)
-	CreateCourseProgression(ctx context.Context, progression *entities.CourseProgression) error
+	CreateCourseProgression(ctx context.Context, userID, courseID, currentLessonID int) error
 	UpdateCourseProgression(ctx context.Context, userID int, courseID int, newCurrentLessonID int, finishedLessonsCount int, isFinished bool) error
 }
 

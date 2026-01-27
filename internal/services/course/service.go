@@ -13,12 +13,13 @@ type Repository interface {
 	GetCourseByID(ctx context.Context, id int) (*entities.Course, error)
 	CreateCourse(ctx context.Context, course *entities.Course) (int, error)
 	ImplementCourse(ctx context.Context, course *entities.Course, nextStateID int) error
+	SetIsPublicField(ctx context.Context, courseID int, isPublic bool) error
+	DeleteCourseDataAndSoftDelete(ctx context.Context, courseID int) error
 
 	GetStateIDByName(ctx context.Context, name entities.StateName) (int, error)
 	GetStateMachineItemByID(ctx context.Context, id int) (*entities.StateMachineItem, error)
 	CheckIsTransitionAvailable(ctx context.Context, stateMachineID, currentStateID, nextStateID int) (bool, error)
 	UpdateStateMachineItemState(ctx context.Context, stateMachineItemID, newStateID int) error
-	SetIsPublicField(ctx context.Context, courseID int, isPublic bool) error
 
 	GetOwnCourseIDs(ctx context.Context, userID int) ([]int, error)
 	GetPublicCourseIDs(ctx context.Context) ([]int, error)

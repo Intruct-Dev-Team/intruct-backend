@@ -53,10 +53,10 @@ func (h *CourseHandlers) UploadCourseContent() http.HandlerFunc {
 		}
 
 		modules := make([]*entities.Module, 0, len(req.Modules))
-		for moduleIdx, modReq := range req.Modules {
+		for _, modReq := range req.Modules {
 			lessons := make([]*entities.Lesson, 0, len(modReq.Lessons))
 
-			for lessonIdx, lessonReq := range modReq.Lessons {
+			for _, lessonReq := range modReq.Lessons {
 				quizzes := make([]*entities.Quiz, 0, len(lessonReq.Quiz))
 
 				for quizIdx, quizReq := range lessonReq.Quiz {
@@ -79,7 +79,7 @@ func (h *CourseHandlers) UploadCourseContent() http.HandlerFunc {
 				}
 
 				lesson := &entities.Lesson{
-					SerialNumber: lessonIdx + 1,
+					SerialNumber: lessonReq.LessonID,
 					Title:        lessonReq.LessonTitle,
 					Content:      lessonReq.Content,
 					Quizzes:      quizzes,
@@ -88,7 +88,7 @@ func (h *CourseHandlers) UploadCourseContent() http.HandlerFunc {
 			}
 
 			module := &entities.Module{
-				SerialNumber: moduleIdx + 1,
+				SerialNumber: modReq.ModuleID,
 				Title:        modReq.ModuleTitle,
 				Lessons:      lessons,
 			}
@@ -148,7 +148,7 @@ func validateUploadRequest(req *uploadCourseRequest) error {
 	}
 
 	totalLessonsCount := 0
-	var eg errgroup.Group
+	var eg errgroup.Group // remove after refactor
 
 	for _, mod := range req.Modules {
 		if mod.ModuleID <= 0 {

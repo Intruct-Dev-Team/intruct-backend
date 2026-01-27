@@ -48,24 +48,26 @@ func (s *LessonService) FinishLesson(ctx context.Context, lessonID int, userID i
 		}
 
 		// create initial progression
-		newProgression := &entities.CourseProgression{
-			UserID:          userID,
-			CourseID:        lesson.CourseID,
-			CurrentLessonID: lessonIDs[0],
-		}
-
-		err = s.repo.CreateCourseProgression(ctx, newProgression)
+		err = s.repo.CreateCourseProgression(ctx, userID, lesson.CourseID, lessonIDs[0])
 		if err != nil {
 			return fmt.Errorf("failed to create course progression: %w", err)
 		}
 
-		progression = newProgression
+		progression = &entities.CourseProgression{
+			UserID:          userID,
+			CourseID:        lesson.CourseID,
+			CurrentLessonID: &lessonIDs[0],
+		}
 	}
 
 	// find current lesson index
+	if progression.CurrentLessonID == nil {
+		return fmt.Errorf("current lesson not set")
+	}
+
 	currentLessonIndex := -1
 	for i, id := range lessonIDs {
-		if id == progression.CurrentLessonID {
+		if id == *progression.CurrentLessonID {
 			currentLessonIndex = i
 			break
 		}
