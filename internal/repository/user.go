@@ -187,6 +187,28 @@ func (r *Repository) GetUserByID(ctx context.Context, id int) (*entities.User, e
 	return &user, nil
 }
 
+func (r *Repository) GetUserStatisticByUserID(ctx context.Context, id int) (*entities.UserStatistic, error) {
+	query, args, err := r.sqlBuilder.
+		Select(
+			`COUNT(*) FILTER (WHERE is_finished = TRUE)  AS count_of_complited_courses`,
+			`COUNT(*) FILTER (WHERE is_finished = FALSE) AS count_of_in_progress_courses`,
+		).
+		From("course_progressions").
+		Where(squirrel.Eq{"user_id": id}).
+		ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	var stat entities.UserStatistic
+	err = r.db.GetContext(ctx, &stat, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get user statistic: %w", err)
+	}
+
+	return &stat, nil
+}
+
 // func (r *Repository) GetUserStatByUserID(ctx context.Context, id int) (*entities.StudentStatistic, error) {
 // 	const query = `
 //     SELECT

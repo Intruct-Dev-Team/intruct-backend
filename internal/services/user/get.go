@@ -19,5 +19,11 @@ func (s *UserService) GetUser(ctx context.Context, userID int) (*entities.User, 
 		return nil, fmt.Errorf("failed to get user: %w", err)
 	}
 
+	stat, err := s.repo.GetUserStatisticByUserID(ctx, userID)
+	if err != nil || stat == nil {
+		return nil, fmt.Errorf("failed to get user statistic: %w", err)
+	}
+	user.Statistic = *stat
+
 	return user, nil
 }

@@ -11,4 +11,11 @@ type User struct {
 	RegistrationDate time.Time `db:"registration_date"`
 	Birthdate        time.Time `db:"birthdate"`
 	Avatar           string    `db:"avatar"`
+
+	Statistic UserStatistic `db:"-"`
+}
+
+type UserStatistic struct {
+	CountOfCompletedCourses  int `db:"count_of_complited_courses"`
+	CountOfInProgressCourses int `db:"count_of_in_progress_courses"`
 }
