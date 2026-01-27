@@ -157,6 +157,38 @@ func (r *Repository) GetCourseByID(ctx context.Context, id int) (*entities.Cours
 	return &course, nil
 }
 
+func (r *Repository) GetCourseStatisticByCourseID(ctx context.Context, courseID int) (*entities.CourseStatistic, error) {
+	query, args, err := r.sqlBuilder.
+		Select(
+			"c.course_id",
+			"COALESCE(COUNT(DISTINCT cp.user_id), 0) as students_count",
+			"COALESCE(AVG(r.rating), 0) as average_rating",
+			"COALESCE(COUNT(r.rating_id), 0) as ratings_count",
+		).
+		From("courses c").
+		LeftJoin("course_progressions cp ON c.course_id = cp.course_id").
+		LeftJoin("ratings r ON c.course_id = r.course_id").
+		Where(squirrel.Eq{"c.course_id": courseID}).
+		Where(squirrel.Eq{"c.deleted_at": nil}).
+		GroupBy("c.course_id").
+		ToSql()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	var statistic entities.CourseStatistic
+	err = r.db.GetContext(ctx, &statistic, query, args...)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, internalErrs.ErrorSelectEmpty
+		}
+		return nil, fmt.Errorf("failed to get course statistic for course [%d]: %w", courseID, err)
+	}
+
+	return &statistic, nil
+}
+
 func (r *Repository) CreateCourse(ctx context.Context, course *entities.Course) (int, error) {
 	stateMachine, err := r.getStateMachineByName(ctx, entities.CourseStateMachineName)
 	if err != nil {

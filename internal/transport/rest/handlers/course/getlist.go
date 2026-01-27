@@ -84,6 +84,9 @@ func (h *CourseHandlers) ListCourses() http.HandlerFunc {
 				IsPublic:        course.IsPublic,
 				IsMine:          course.OwnerID == userID,
 				IsInMine:        isInMine,
+				StudentsCount:   course.Statistic.StudentsCount,
+				AverageRating:   course.Statistic.AverageRating,
+				RatingsCount:    course.Statistic.RatingsCount,
 			})
 		}
 
@@ -110,4 +113,7 @@ type courseItem struct {
 	IsPublic        bool      `json:"is_public"        example:"true"`
 	IsMine          bool      `json:"is_mine"          example:"false"`
 	IsInMine        bool      `json:"is_in_mine"       example:"false"`
+	StudentsCount   int       `json:"students_count"   example:"0"`
+	AverageRating   float64   `json:"average_rating"   example:"5"`
+	RatingsCount    int       `json:"ratings_count"    example:"1"`
 }

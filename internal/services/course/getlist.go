@@ -55,7 +55,7 @@ func (s *CourseService) GetCourseList(ctx context.Context, userID int, inMine bo
 	}
 
 	// get user's course progressions
-	progressions, err := s.repo.GetUsersCourseProgressions(ctx, userID)
+	progressions, err := s.repo.GetUserCourseProgressions(ctx, userID)
 	if err != nil && !errors.Is(err, serviceErrs.ErrorSelectEmpty) {
 		return nil, fmt.Errorf("failed to get user progressions: %w", err)
 	}
@@ -64,6 +64,25 @@ func (s *CourseService) GetCourseList(ctx context.Context, userID int, inMine bo
 		course, ok := courseMap[p.CourseID]
 		if ok {
 			course.CourseProgression = p
+		}
+	}
+
+	// get statistics for all courses
+	statisticsMap := make(map[int]*entities.CourseStatistic)
+	for courseID := range courseMap {
+		statisticsMap[courseID] = nil
+	}
+
+	wpStats := workerpool.NewWorkerPool[entities.CourseStatistic](5)
+	err = wpStats.FillMap(ctx, statisticsMap, s.repo.GetCourseStatisticByCourseID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get course statistics: %w", err)
+	}
+
+	for courseID, stat := range statisticsMap {
+		course, ok := courseMap[courseID]
+		if ok && stat != nil {
+			course.Statistic = *stat
 		}
 	}
 

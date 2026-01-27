@@ -15,6 +15,9 @@ definitions:
       author_id:
         example: 1
         type: integer
+      average_rating:
+        example: 5
+        type: number
       created_at:
         example: "2022-09-09T10:10:10Z"
         type: string
@@ -39,9 +42,15 @@ definitions:
       lessons_number:
         example: 10
         type: integer
+      ratings_count:
+        example: 1
+        type: integer
       state:
         example: published
         type: string
+      students_count:
+        example: 0
+        type: integer
       title:
         example: Introduction to Go
         type: string
@@ -62,6 +71,9 @@ definitions:
       author_id:
         example: 1
         type: integer
+      average_rating:
+        example: 5
+        type: number
       created_at:
         example: "2022-09-09T10:10:10Z"
         type: string
@@ -90,9 +102,15 @@ definitions:
         items:
           $ref: '#/definitions/course.moduleItem'
         type: array
+      ratings_count:
+        example: 1
+        type: integer
       state:
         example: published
         type: string
+      students_count:
+        example: 0
+        type: integer
       title:
         example: Introduction to Go
         type: string
