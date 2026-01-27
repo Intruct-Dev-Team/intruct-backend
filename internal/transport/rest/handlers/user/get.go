@@ -102,14 +102,16 @@ func (h *UserHandlers) GetUserProtected() http.HandlerFunc {
 
 func mappingToUserResp(user *entities.User) *getUserResponse {
 	resp := getUserResponse{
-		ID:               user.ID,
-		ExternalUUID:     user.ExternalUUID,
-		Email:            user.Email,
-		Name:             user.Name,
-		Surname:          user.Surname,
-		RegistrationDate: user.RegistrationDate,
-		Birthdate:        user.Birthdate,
-		Avatar:           user.Avatar,
+		ID:                user.ID,
+		ExternalUUID:      user.ExternalUUID,
+		Email:             user.Email,
+		Name:              user.Name,
+		Surname:           user.Surname,
+		RegistrationDate:  user.RegistrationDate,
+		Birthdate:         user.Birthdate,
+		Avatar:            user.Avatar,
+		CompletedCourses:  user.Statistic.CountOfCompletedCourses,
+		InProgressCourses: user.Statistic.CountOfInProgressCourses,
 	}
 
 	return &resp
