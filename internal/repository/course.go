@@ -38,6 +38,29 @@ func (r *Repository) IsCourseExistsByOwnerAndTitle(ctx context.Context, ownerID 
 	return exists, nil
 }
 
+func (r *Repository) IsCourseExistsByID(ctx context.Context, courseID int) (bool, error) {
+	query, args, err := r.sqlBuilder.
+		Select("1").
+		From("courses").
+		Where(squirrel.Eq{"course_id": courseID}).
+		Where(squirrel.Eq{"deleted_at": nil}).
+		Prefix("SELECT EXISTS(").
+		Suffix(")").
+		ToSql()
+
+	if err != nil {
+		return false, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	var exists bool
+	err = r.db.GetContext(ctx, &exists, query, args...)
+	if err != nil {
+		return false, fmt.Errorf("failed to check course existence by course_id: %w", err)
+	}
+
+	return exists, nil
+}
+
 func (r *Repository) GetOwnCourseIDs(ctx context.Context, userID int) ([]int, error) {
 	query, args, err := r.sqlBuilder.
 		Select("course_id").

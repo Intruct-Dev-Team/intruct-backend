@@ -23,6 +23,7 @@ type CourseService interface {
 	GetCourse(ctx context.Context, courseID int, userID int) (*entities.Course, error)
 	DeleteCourse(ctx context.Context, courseID int, userID int) error
 	GetCourseStateAndUpdatedTime(ctx context.Context, courseID int, userID int) (string, time.Time, error)
+	RateCourse(ctx context.Context, courseID int, userID int, rating int) error
 }
 
 type N8NService interface {
@@ -59,6 +60,7 @@ func (h *CourseHandlers) SetupCourseRoutes(router *chi.Mux, jwtAuthMiddleware fu
 		r.Put(publishCourseRoute, h.PublishCourse())
 		r.Delete(deleteCourseRoute, h.DeleteCourse())
 		r.Get(getCourseStateRoute, h.GetCourseState())
+		r.Post(rateCourseRoute, h.RateCourse())
 	})
 	coursesRouter.Patch(UploadCourseRoute, h.UploadCourseContent())
 
