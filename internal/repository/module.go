@@ -140,3 +140,20 @@ func (r *Repository) insertModule(ctx context.Context, tx *sqlx.Tx, courseID int
 
 	return moduleID, nil
 }
+
+func (r *Repository) deleteModulesByCourseID(ctx context.Context, tx *sqlx.Tx, courseID int) error {
+	query, args, err := r.sqlBuilder.
+		Delete("modules").
+		Where(squirrel.Eq{"course_id": courseID}).
+		ToSql()
+
+	if err != nil {
+		return fmt.Errorf("failed to build query: %w", err)
+	}
+
+	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
+		return fmt.Errorf("failed to delete modules: %w", err)
+	}
+
+	return nil
+}

@@ -9,6 +9,7 @@ import (
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/entities"
 	internalErrs "github.com/Intruct-Dev-Team/intruct-backend/internal/errors"
 	"github.com/Masterminds/squirrel"
+	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 )
 
@@ -20,6 +21,7 @@ func (r *Repository) IsCourseExistsByOwnerAndTitle(ctx context.Context, ownerID 
 			"owner_id": ownerID,
 			"title":    title,
 		}).
+		Where(squirrel.Eq{"deleted_at": nil}).
 		Prefix("SELECT EXISTS(").
 		Suffix(")").
 		ToSql()
@@ -42,6 +44,7 @@ func (r *Repository) GetOwnCourseIDs(ctx context.Context, userID int) ([]int, er
 		Select("course_id").
 		From("courses").
 		Where(squirrel.Eq{"owner_id": userID}).
+		Where(squirrel.Eq{"deleted_at": nil}).
 		ToSql()
 
 	if err != nil {
@@ -69,6 +72,7 @@ func (r *Repository) GetPublicCourseIDs(ctx context.Context) ([]int, error) {
 		Select("course_id").
 		From("courses").
 		Where(squirrel.Eq{"is_public": true}).
+		Where(squirrel.Eq{"deleted_at": nil}).
 		ToSql()
 
 	if err != nil {
@@ -109,6 +113,7 @@ func (r *Repository) GetCourseByID(ctx context.Context, id int) (*entities.Cours
 		From("courses c").
 		LeftJoin("languages l ON c.language_id = l.language_id").
 		Where(squirrel.Eq{"c.course_id": id}).
+		Where(squirrel.Eq{"c.deleted_at": nil}).
 		ToSql()
 
 	if err != nil {
@@ -248,6 +253,76 @@ func (r *Repository) ImplementCourse(ctx context.Context, course *entities.Cours
 
 	if err := tx.Commit(); err != nil {
 		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return nil
+}
+
+func (r *Repository) DeleteCourseDataAndSoftDelete(ctx context.Context, courseID int) error {
+	tx, err := r.db.BeginTxx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	// 1. get all lesson IDs for this course
+	lessonIDs, err := r.getLessonIDsByCourseID(ctx, tx, courseID)
+	if err != nil {
+		return fmt.Errorf("failed to get lesson IDs: %w", err)
+	}
+
+	// 2. nullify current_lesson_id in progressions for this course
+	if err := r.nullifyCurrentLessonInProgressions(ctx, tx, courseID); err != nil {
+		return fmt.Errorf("failed to nullify current lesson in progressions: %w", err)
+	}
+
+	// 3. delete quiz options for all lessons
+	if len(lessonIDs) > 0 {
+		if err := r.deleteQuizOptionsByLessonIDs(ctx, tx, lessonIDs); err != nil {
+			return fmt.Errorf("failed to delete quiz options: %w", err)
+		}
+
+		// 4. delete quizzes for all lessons
+		if err := r.deleteQuizzesByLessonIDs(ctx, tx, lessonIDs); err != nil {
+			return fmt.Errorf("failed to delete quizzes: %w", err)
+		}
+	}
+
+	// 5. delete lessons
+	if err := r.deleteLessonsByCourseID(ctx, tx, courseID); err != nil {
+		return fmt.Errorf("failed to delete lessons: %w", err)
+	}
+
+	// 6. delete modules
+	if err := r.deleteModulesByCourseID(ctx, tx, courseID); err != nil {
+		return fmt.Errorf("failed to delete modules: %w", err)
+	}
+
+	// 7. Soft delete course (keep progressions for statistics)
+	if err := r.softDeleteCourse(ctx, tx, courseID); err != nil {
+		return fmt.Errorf("failed to soft delete course: %w", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return nil
+}
+
+func (r *Repository) softDeleteCourse(ctx context.Context, tx *sqlx.Tx, courseID int) error {
+	query, args, err := r.sqlBuilder.
+		Update("courses").
+		Set("deleted_at", squirrel.Expr("NOW()")).
+		Where(squirrel.Eq{"course_id": courseID}).
+		ToSql()
+
+	if err != nil {
+		return fmt.Errorf("failed to build query: %w", err)
+	}
+
+	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
+		return fmt.Errorf("failed to soft delete course: %w", err)
 	}
 
 	return nil

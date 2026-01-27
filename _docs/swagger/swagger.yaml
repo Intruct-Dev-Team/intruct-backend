@@ -546,6 +546,48 @@ paths:
       summary: Get course
       tags:
       - course
+  /courses/{course_id}/delete:
+    delete:
+      description: |-
+        Delete a course by removing all content (modules, lessons, quizzes) and soft delete course from db
+        Prerequisites: User must be authenticated and must be the owner of the course
+        Course must exist
+      parameters:
+      - description: Course ID
+        in: path
+        name: course_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid course ID
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "401":
+          description: Authentication required
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "403":
+          description: User is not the owner of the course
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      security:
+      - BearerAuth: []
+      summary: Delete course
+      tags:
+      - course
   /courses/{course_id}/publish:
     put:
       description: |-

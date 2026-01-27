@@ -206,3 +206,39 @@ func (r *Repository) insertLesson(ctx context.Context, tx *sqlx.Tx, courseID, mo
 
 	return lessonID, nil
 }
+
+func (r *Repository) getLessonIDsByCourseID(ctx context.Context, tx *sqlx.Tx, courseID int) ([]int, error) {
+	query, args, err := r.sqlBuilder.
+		Select("lesson_id").
+		From("lessons").
+		Where(squirrel.Eq{"course_id": courseID}).
+		ToSql()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	var lessonIDs []int
+	if err := tx.SelectContext(ctx, &lessonIDs, query, args...); err != nil {
+		return nil, fmt.Errorf("failed to get lesson IDs: %w", err)
+	}
+
+	return lessonIDs, nil
+}
+
+func (r *Repository) deleteLessonsByCourseID(ctx context.Context, tx *sqlx.Tx, courseID int) error {
+	query, args, err := r.sqlBuilder.
+		Delete("lessons").
+		Where(squirrel.Eq{"course_id": courseID}).
+		ToSql()
+
+	if err != nil {
+		return fmt.Errorf("failed to build query: %w", err)
+	}
+
+	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
+		return fmt.Errorf("failed to delete lessons: %w", err)
+	}
+
+	return nil
+}

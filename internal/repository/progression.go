@@ -9,6 +9,7 @@ import (
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/entities"
 	internalErrs "github.com/Intruct-Dev-Team/intruct-backend/internal/errors"
 	"github.com/Masterminds/squirrel"
+	"github.com/jmoiron/sqlx"
 )
 
 func (r *Repository) GetUsersCourseProgressions(ctx context.Context, userID int) ([]*entities.CourseProgression, error) {
@@ -78,9 +79,11 @@ func (r *Repository) GetCourseProgressionByUserAndCourse(ctx context.Context, us
 
 func (r *Repository) GetCourseIDsFromUserProgress(ctx context.Context, userID int) ([]int, error) {
 	query, args, err := r.sqlBuilder.
-		Select("course_id").
-		From("course_progressions").
+		Select("p.course_id").
+		From("course_progressions p").
+		InnerJoin("courses c ON p.course_id = c.course_id").
 		Where(squirrel.Eq{"user_id": userID}).
+		Where(squirrel.Eq{"c.deleted_at": nil}).
 		ToSql()
 
 	if err != nil {
@@ -103,7 +106,7 @@ func (r *Repository) GetCourseIDsFromUserProgress(ctx context.Context, userID in
 	return courseIDs, nil
 }
 
-func (r *Repository) CreateCourseProgression(ctx context.Context, progression *entities.CourseProgression) error {
+func (r *Repository) CreateCourseProgression(ctx context.Context, userID, courseID, currentLessonID int) error {
 	query, args, err := r.sqlBuilder.
 		Insert("course_progressions").
 		Columns(
@@ -112,9 +115,9 @@ func (r *Repository) CreateCourseProgression(ctx context.Context, progression *e
 			"current_lesson_id",
 		).
 		Values(
-			progression.UserID,
-			progression.CourseID,
-			progression.CurrentLessonID,
+			userID,
+			courseID,
+			currentLessonID,
 		).
 		ToSql()
 
@@ -124,7 +127,7 @@ func (r *Repository) CreateCourseProgression(ctx context.Context, progression *e
 
 	_, err = r.db.ExecContext(ctx, query, args...)
 	if err != nil {
-		return fmt.Errorf("failed to create course progression for user [%d] and course [%d]: %w", progression.UserID, progression.CourseID, err)
+		return fmt.Errorf("failed to create course progression for user [%d] and course [%d]: %w", userID, courseID, err)
 	}
 
 	return nil
@@ -149,6 +152,24 @@ func (r *Repository) UpdateCourseProgression(ctx context.Context, userID int, co
 	_, err = r.db.ExecContext(ctx, query, args...)
 	if err != nil {
 		return fmt.Errorf("failed to update course progression for user [%d] and course [%d]: %w", userID, courseID, err)
+	}
+
+	return nil
+}
+
+func (r *Repository) nullifyCurrentLessonInProgressions(ctx context.Context, tx *sqlx.Tx, courseID int) error {
+	query, args, err := r.sqlBuilder.
+		Update("course_progressions").
+		Set("current_lesson_id", nil).
+		Where(squirrel.Eq{"course_id": courseID}).
+		ToSql()
+
+	if err != nil {
+		return fmt.Errorf("failed to build query: %w", err)
+	}
+
+	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
+		return fmt.Errorf("failed to nullify current lesson: %w", err)
 	}
 
 	return nil
