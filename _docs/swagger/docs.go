@@ -397,6 +397,70 @@ const docTemplate = `{
                 }
             }
         },
+        "/courses/{course_id}/state": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a course state return course state\nPrerequisites: User must be authenticated and must be the owner of the course\nCourse must exist",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "Get course state",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "course_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/course.getCourseStateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid course ID",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication required",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not the owner of the course",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "404": {
+                        "description": "Course not found",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorStruct"
+                        }
+                    }
+                }
+            }
+        },
         "/courses/{course_id}/upload": {
             "patch": {
                 "description": "Upload processed course content with modules, lessons and quizzes from n8n workflow\nThis endpoint fills the course with educational content after file processing",
@@ -801,6 +865,20 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "example": "Introduction to Go"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2022-09-09T10:10:10Z"
+                }
+            }
+        },
+        "course.getCourseStateResponse": {
+            "description": "getCourseStateResponse returns course state",
+            "type": "object",
+            "properties": {
+                "state": {
+                    "type": "string",
+                    "example": "in creation"
                 },
                 "updated_at": {
                     "type": "string",

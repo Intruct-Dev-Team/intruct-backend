@@ -91,6 +91,16 @@ definitions:
         example: "2022-09-09T10:10:10Z"
         type: string
     type: object
+  course.getCourseStateResponse:
+    description: getCourseStateResponse returns course state
+    properties:
+      state:
+        example: in creation
+        type: string
+      updated_at:
+        example: "2022-09-09T10:10:10Z"
+        type: string
+    type: object
   course.lessonItem:
     description: lessonItem represents a lesson in the module
     properties:
@@ -638,6 +648,50 @@ paths:
       security:
       - BearerAuth: []
       summary: Publish course
+      tags:
+      - course
+  /courses/{course_id}/state:
+    get:
+      description: |-
+        Get a course state return course state
+        Prerequisites: User must be authenticated and must be the owner of the course
+        Course must exist
+      parameters:
+      - description: Course ID
+        in: path
+        name: course_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/course.getCourseStateResponse'
+        "400":
+          description: Invalid course ID
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "401":
+          description: Authentication required
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "403":
+          description: User is not the owner of the course
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ErrorStruct'
+      security:
+      - BearerAuth: []
+      summary: Get course state
       tags:
       - course
   /courses/{course_id}/upload:

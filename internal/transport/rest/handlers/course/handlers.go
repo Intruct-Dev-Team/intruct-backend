@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/entities"
 	"github.com/go-chi/chi/v5"
@@ -21,6 +22,7 @@ type CourseService interface {
 	GetCourseList(ctx context.Context, userID int, inMine bool) ([]*entities.Course, error)
 	GetCourse(ctx context.Context, courseID int, userID int) (*entities.Course, error)
 	DeleteCourse(ctx context.Context, courseID int, userID int) error
+	GetCourseStateAndUpdatedTime(ctx context.Context, courseID int, userID int) (string, time.Time, error)
 }
 
 type N8NService interface {
@@ -56,6 +58,7 @@ func (h *CourseHandlers) SetupCourseRoutes(router *chi.Mux, jwtAuthMiddleware fu
 		r.Get(getCourseRoute, h.GetCourse())
 		r.Put(publishCourseRoute, h.PublishCourse())
 		r.Delete(deleteCourseRoute, h.DeleteCourse())
+		r.Get(getCourseStateRoute, h.GetCourseState())
 	})
 	coursesRouter.Patch(UploadCourseRoute, h.UploadCourseContent())
 
