@@ -17,7 +17,9 @@ type Repository interface {
 	GetCourseProgressionByUserAndCourse(ctx context.Context, userID int, courseID int) (*entities.CourseProgression, error)
 	GetAllLessonIDsByCourseIDOrderedBySerial(ctx context.Context, courseID int) ([]int, error)
 	CreateCourseProgression(ctx context.Context, userID, courseID, currentLessonID int) error
-	UpdateCourseProgression(ctx context.Context, userID int, courseID int, newCurrentLessonID int, finishedLessonsCount int, isFinished bool) error
+	GetUserStreakByUserID(ctx context.Context, id int) (*entities.Streak, error)
+	UpdateCourseProgressionAndStreak(ctx context.Context, userID int, courseID int,
+		newCurrentLessonID int, finishedLessonsCount int, isFinished bool, newDaysStreak int) error
 }
 
 type LessonService struct {

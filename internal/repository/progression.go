@@ -133,12 +133,46 @@ func (r *Repository) CreateCourseProgression(ctx context.Context, userID, course
 	return nil
 }
 
-func (r *Repository) UpdateCourseProgression(ctx context.Context, userID int, courseID int, newCurrentLessonID int, finishedLessonsCount int, isFinished bool) error {
+func (r *Repository) UpdateCourseProgressionAndStreak(
+	ctx context.Context,
+	userID int,
+	courseID int,
+	newCurrentLessonID int,
+	finishedLessonsCount int,
+	isFinished bool,
+	newDaysStreak int,
+) error {
+	tx, err := r.db.BeginTxx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	// 1. Update course progression
+	if err := r.updateCourseProgression(ctx, tx, userID, courseID, newCurrentLessonID, finishedLessonsCount, isFinished); err != nil {
+		return fmt.Errorf("failed to update course progression: %w", err)
+	}
+
+	// 2. Create or update streak
+	if err := r.upsertStreak(ctx, tx, userID, newDaysStreak); err != nil {
+		return fmt.Errorf("failed to upsert streak: %w", err)
+	}
+
+	// 3. Commit transaction
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return nil
+}
+
+func (r *Repository) updateCourseProgression(ctx context.Context, tx *sqlx.Tx, userID int, courseID int, newCurrentLessonID int, finishedLessonsCount int, isFinished bool) error {
 	query, args, err := r.sqlBuilder.
 		Update("course_progressions").
 		Set("current_lesson_id", newCurrentLessonID).
 		Set("finished_lessons_count", finishedLessonsCount).
 		Set("is_finished", isFinished).
+		Set("updated_at", squirrel.Expr("NOW()")).
 		Where(squirrel.Eq{
 			"user_id":   userID,
 			"course_id": courseID,
@@ -149,9 +183,8 @@ func (r *Repository) UpdateCourseProgression(ctx context.Context, userID int, co
 		return fmt.Errorf("failed to build query: %w", err)
 	}
 
-	_, err = r.db.ExecContext(ctx, query, args...)
-	if err != nil {
-		return fmt.Errorf("failed to update course progression for user [%d] and course [%d]: %w", userID, courseID, err)
+	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
+		return fmt.Errorf("failed to execute update: %w", err)
 	}
 
 	return nil

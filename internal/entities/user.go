@@ -13,6 +13,7 @@ type User struct {
 	Avatar           string    `db:"avatar"`
 
 	Statistic UserStatistic `db:"-"`
+	Streak    Streak        `db:"-"`
 }
 
 type UserStatistic struct {

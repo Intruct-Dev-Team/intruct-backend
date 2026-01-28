@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/entities"
 	serviceErrs "github.com/Intruct-Dev-Team/intruct-backend/internal/errors"
@@ -85,7 +86,7 @@ func (s *LessonService) FinishLesson(ctx context.Context, lessonID int, userID i
 		return serviceErrs.ErrorLessonFinished
 	}
 
-	// update progression
+	// calculate new progression values
 	newFinishedCount := progression.FinishedLessonsCount + 1
 	var newCurrentLessonID int
 	var isFinished bool
@@ -99,9 +100,54 @@ func (s *LessonService) FinishLesson(ctx context.Context, lessonID int, userID i
 		isFinished = false
 	}
 
-	err = s.repo.UpdateCourseProgression(ctx, userID, lesson.CourseID, newCurrentLessonID, newFinishedCount, isFinished)
+	// get or create user streak
+	streak, err := s.repo.GetUserStreakByUserID(ctx, userID)
+	if err != nil && !errors.Is(err, serviceErrs.ErrorSelectEmpty) {
+		return fmt.Errorf("failed to get user streak: %w", err)
+	}
+
+	// calculate streak values
+	var newDaysStreak int
+
+	if streak == nil {
+		// no streak exists - will be created with initial values
+		newDaysStreak = 1
+	} else {
+		now := time.Now().UTC()
+		today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+
+		updatedDay := time.Date(
+			streak.UpdatedAt.UTC().Year(),
+			streak.UpdatedAt.UTC().Month(),
+			streak.UpdatedAt.UTC().Day(),
+			0, 0, 0, 0,
+			time.UTC,
+		)
+
+		if updatedDay.Equal(today) {
+			// already completed today - no change
+			newDaysStreak = streak.DaysStreakCount
+		} else if updatedDay.Equal(today.AddDate(0, 0, -1)) {
+			// completed yesterday - increment streak
+			newDaysStreak = streak.DaysStreakCount + 1
+		} else {
+			// streak broken - reset
+			newDaysStreak = 1
+		}
+	}
+
+	// transactionally update progression and streak (or create streak if needed)
+	err = s.repo.UpdateCourseProgressionAndStreak(
+		ctx,
+		userID,
+		lesson.CourseID,
+		newCurrentLessonID,
+		newFinishedCount,
+		isFinished,
+		newDaysStreak,
+	)
 	if err != nil {
-		return fmt.Errorf("failed to update course progression: %w", err)
+		return fmt.Errorf("failed to update course progression and streak: %w", err)
 	}
 
 	return nil
