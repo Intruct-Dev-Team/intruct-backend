@@ -398,12 +398,18 @@ definitions:
       in_progress_courses:
         example: 1
         type: integer
+      is_streak_active_today:
+        example: false
+        type: boolean
       name:
         example: John
         type: string
       registration_date:
         example: "2022-09-09T10:10:10+09:00"
         type: string
+      streak:
+        example: 1
+        type: integer
       surname:
         example: Smith
         type: string

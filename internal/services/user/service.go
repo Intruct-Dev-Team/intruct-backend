@@ -17,9 +17,7 @@ type Repository interface {
 	CreateUser(ctx context.Context, user *entities.User) (int, error)
 	GetUserByID(ctx context.Context, id int) (*entities.User, error)
 	GetUserStatisticByUserID(ctx context.Context, id int) (*entities.UserStatistic, error)
-	// IsTeacherExistsByUserID(ctx context.Context, id int) (bool, error)
-	// GetUserByEmail(ctx context.Context, email string) (*entities.User, error)
-	// UpdateUser(ctx context.Context, userID int, user *entities.User) error
+	GetUserStreakByUserID(ctx context.Context, id int) (*entities.Streak, error)
 }
 
 type UserService struct {

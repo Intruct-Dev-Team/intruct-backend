@@ -102,16 +102,18 @@ func (h *UserHandlers) GetUserProtected() http.HandlerFunc {
 
 func mappingToUserResp(user *entities.User) *getUserResponse {
 	resp := getUserResponse{
-		ID:                user.ID,
-		ExternalUUID:      user.ExternalUUID,
-		Email:             user.Email,
-		Name:              user.Name,
-		Surname:           user.Surname,
-		RegistrationDate:  user.RegistrationDate,
-		Birthdate:         user.Birthdate,
-		Avatar:            user.Avatar,
-		CompletedCourses:  user.Statistic.CountOfCompletedCourses,
-		InProgressCourses: user.Statistic.CountOfInProgressCourses,
+		ID:                  user.ID,
+		ExternalUUID:        user.ExternalUUID,
+		Email:               user.Email,
+		Name:                user.Name,
+		Surname:             user.Surname,
+		RegistrationDate:    user.RegistrationDate,
+		Birthdate:           user.Birthdate,
+		Avatar:              user.Avatar,
+		CompletedCourses:    user.Statistic.CountOfCompletedCourses,
+		InProgressCourses:   user.Statistic.CountOfInProgressCourses,
+		Streak:              user.Streak.DaysStreakCount,
+		IsStreakActiveToday: user.Streak.IsStreakActiveToday,
 	}
 
 	return &resp
@@ -120,14 +122,16 @@ func mappingToUserResp(user *entities.User) *getUserResponse {
 /* Mapping struct */
 
 type getUserResponse struct {
-	ID                int       `json:"id"                   example:"1"`
-	ExternalUUID      string    `json:"external_uuid"        example:"uuid"`
-	Email             string    `json:"email"                example:"qwerty@example.com"`
-	Name              string    `json:"name"                 example:"John"`
-	Surname           string    `json:"surname"              example:"Smith"`
-	RegistrationDate  time.Time `json:"registration_date"    example:"2022-09-09T10:10:10+09:00"`
-	Birthdate         time.Time `json:"birthdate"            example:"2002-09-09T10:10:10+09:00"`
-	Avatar            string    `json:"avatar"               example:"uuid.png"`
-	CompletedCourses  int       `json:"completed_courses"    example:"1"`
-	InProgressCourses int       `json:"in_progress_courses"  example:"1"`
+	ID                  int       `json:"id"                     example:"1"`
+	ExternalUUID        string    `json:"external_uuid"          example:"uuid"`
+	Email               string    `json:"email"                  example:"qwerty@example.com"`
+	Name                string    `json:"name"                   example:"John"`
+	Surname             string    `json:"surname"                example:"Smith"`
+	RegistrationDate    time.Time `json:"registration_date"      example:"2022-09-09T10:10:10+09:00"`
+	Birthdate           time.Time `json:"birthdate"              example:"2002-09-09T10:10:10+09:00"`
+	Avatar              string    `json:"avatar"                 example:"uuid.png"`
+	CompletedCourses    int       `json:"completed_courses"      example:"1"`
+	InProgressCourses   int       `json:"in_progress_courses"    example:"1"`
+	Streak              int       `json:"streak"                 example:"1"`
+	IsStreakActiveToday bool      `json:"is_streak_active_today" example:"false"`
 }

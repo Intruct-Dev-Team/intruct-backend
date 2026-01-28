@@ -1361,6 +1361,10 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 1
                 },
+                "is_streak_active_today": {
+                    "type": "boolean",
+                    "example": false
+                },
                 "name": {
                     "type": "string",
                     "example": "John"
@@ -1368,6 +1372,10 @@ const docTemplate = `{
                 "registration_date": {
                     "type": "string",
                     "example": "2022-09-09T10:10:10+09:00"
+                },
+                "streak": {
+                    "type": "integer",
+                    "example": 1
                 },
                 "surname": {
                     "type": "string",
