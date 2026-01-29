@@ -125,8 +125,13 @@ func (s *LessonService) FinishLesson(ctx context.Context, lessonID int, userID i
 		)
 
 		if updatedDay.Equal(today) {
-			// already completed today - no change
-			newDaysStreak = streak.DaysStreakCount
+			// if it's first completion today, keep streak or set to 1
+			if streak.DaysStreakCount == 0 {
+				newDaysStreak = 1
+			} else {
+				// already completed today - no change
+				newDaysStreak = streak.DaysStreakCount
+			}
 		} else if updatedDay.Equal(today.AddDate(0, 0, -1)) {
 			// completed yesterday - increment streak
 			newDaysStreak = streak.DaysStreakCount + 1
