@@ -163,7 +163,7 @@ func (r *Repository) GetCourseStatisticByCourseID(ctx context.Context, courseID 
 			"c.course_id",
 			"COALESCE(COUNT(DISTINCT cp.user_id), 0) as students_count",
 			"COALESCE(AVG(r.rating), 0) as average_rating",
-			"COALESCE(COUNT(r.rating_id), 0) as ratings_count",
+			"COALESCE(COUNT(DISTINCT r.rating_id), 0) as ratings_count",
 		).
 		From("courses c").
 		LeftJoin("course_progressions cp ON c.course_id = cp.course_id").
