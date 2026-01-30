@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/Intruct-Dev-Team/intruct-backend/internal/transport/rest/handlers"
@@ -65,10 +66,36 @@ func NewServer(services Services, config Config, log *zap.Logger) *Server {
 
 	router.Mount(apiRoute, apiRouter)
 
+	// normalize swagger root
+	router.Get("/swagger", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-store")
+		http.Redirect(w, r, "/swagger/index.html", http.StatusFound)
+	})
+	router.Get("/swagger/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-store")
+		http.Redirect(w, r, "/swagger/index.html", http.StatusFound)
+	})
+
 	// add swagger endpoint
-	router.Get("/swagger/*", httpSwagger.Handler(
+	swaggerHandler := httpSwagger.Handler(
 		httpSwagger.URL("/swagger/doc.json"), // URL to JSON docs file
-	))
+	)
+	router.Get("/swagger/*", func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/swagger/v1/") || r.URL.Path == "/swagger/doc.json" {
+			swaggerHandler.ServeHTTP(w, r)
+			return
+		}
+
+		if strings.HasPrefix(r.URL.Path, "/swagger/") {
+			rewritten := r.Clone(r.Context())
+			rewritten.URL.Path = "/swagger/v1/" + strings.TrimPrefix(r.URL.Path, "/swagger/")
+			rewritten.RequestURI = rewritten.URL.RequestURI()
+			swaggerHandler.ServeHTTP(w, rewritten)
+			return
+		}
+
+		swaggerHandler.ServeHTTP(w, r)
+	})
 
 	return &Server{
 		server: &http.Server{
