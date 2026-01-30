@@ -131,10 +131,10 @@ or visit started Swagger: `https://intruct.com/swagger/ `<br>
 All API endpoints you can see in Swagger UI:
 
 - **Deployed Swagger UI**:
-  `https://intruct.com/swagger/index.html#/`
+  `https://intruct.com/swagger/`
 
 - **Local Swagger UI** (when running the service):
-  `http://localhost/swagger/index.html`
+  `http://localhost/swagger/`
 
 
 > For detailed request/response models and all available endpoints, refer to the Swagger UI.
