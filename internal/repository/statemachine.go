@@ -43,35 +43,35 @@ func (r *Repository) GetStateMachineItemByID(ctx context.Context, id int) (*enti
 	return &stItem, nil
 }
 
-// func (r *Repository) GetStateByID(ctx context.Context, id int) (*entities.State, error) {
-// 	query, args, err := r.sqlBuilder.
-// 		Select(
-// 			"state_id",
-// 			"name",
-// 		).
-// 		From("states").
-// 		Where(squirrel.Eq{
-// 			"state_id": id,
-// 		}).
-// 		ToSql()
+func (r *Repository) GetStateByID(ctx context.Context, id int) (*entities.State, error) {
+	query, args, err := r.sqlBuilder.
+		Select(
+			"state_id",
+			"name",
+		).
+		From("states").
+		Where(squirrel.Eq{
+			"state_id": id,
+		}).
+		ToSql()
 
-// 	if err != nil {
-// 		return nil, fmt.Errorf("failed to build query: %w", err)
-// 	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
 
-// 	var state entities.State
-// 	err = r.db.GetContext(ctx, &state, query, args...)
+	var state entities.State
+	err = r.db.GetContext(ctx, &state, query, args...)
 
-// 	if err != nil {
-// 		if errors.Is(err, sql.ErrNoRows) {
-// 			return nil, internalErrs.ErrorSelectEmpty
-// 		}
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, internalErrs.ErrorSelectEmpty
+		}
 
-// 		return nil, fmt.Errorf("failed to get state by id: %w", err)
-// 	}
+		return nil, fmt.Errorf("failed to get state by id: %w", err)
+	}
 
-// 	return &state, nil
-// }
+	return &state, nil
+}
 
 func (r *Repository) GetStateIDByName(ctx context.Context, name entities.StateName) (int, error) {
 	query, args, err := r.sqlBuilder.

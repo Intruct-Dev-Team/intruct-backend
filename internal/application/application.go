@@ -35,15 +35,6 @@ type Services struct {
 	language.LanguageService
 	course.CourseService
 	lesson.LessonService
-	// 	kratos.KratosService
-	// 	teacher.TeacherService
-	// 	schedule.ScheduleService
-	// 	review.ReviewService
-	// 	image.ImageService
-	// 	category.CategoryService
-	// 	skill.SkillService
-	// 	complaint.ComplaintService
-	// 	common.CommonService
 }
 
 func NewServices(
@@ -53,15 +44,6 @@ func NewServices(
 	languageService *language.LanguageService,
 	courseService *course.CourseService,
 	lessonService *lesson.LessonService,
-	// kratosService *kratos.KratosService,
-	// teacherService *teacher.TeacherService,
-	// scheduleService *schedule.ScheduleService,
-	// reviewService *review.ReviewService,
-	// imageService *image.ImageService,
-	// categoryService *category.CategoryService,
-	// skillService *skill.SkillService,
-	// complaintService *complaint.ComplaintService,
-	// commonService *common.CommonService,
 ) *Services {
 	return &Services{
 		JWTService:      *jwtService,
@@ -70,15 +52,6 @@ func NewServices(
 		LanguageService: *languageService,
 		CourseService:   *courseService,
 		LessonService:   *lessonService,
-		// 		KratosService:    *kratosService,
-		// 		TeacherService:   *teacherService,
-		// 		ScheduleService:  *scheduleService,
-		// 		ReviewService:    *reviewService,
-		// 		ImageService:     *imageService,
-		// 		CategoryService:  *categoryService,
-		// 		SkillService:     *skillService,
-		// 		ComplaintService: *complaintService,
-		// 		CommonService:    *commonService,
 	}
 }
 
@@ -92,13 +65,6 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 	}
 
 	log.Info("connected to database successfully")
-
-	// s3Client, err := s3.NewClient(&config.S3)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed to connect to S3 object storage (supabase): %w", err)
-	// }
-
-	// log.Info("connected to S3 object storage successfully")
 
 	repo := repository.New(database)
 
@@ -114,24 +80,14 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 	/*----------------------------------------------------------*/
 
 	// services
-	// kratosService := kratos.New(config.Kratos)
 	jwtService := jwt.NewService(config.JwtSecretKey, jwt.WithIssuer("learn-share-backend"))
 	n8nService := n8n.NewService(config.N8NApiRoute, log)
 	fileService := supabase.NewService(&config.ObjectStorage)
-	// liveKitService := livekit.NewService(config.LiveKit)
-	// commonService := common.NewService(repo)
 
 	userService := user.NewService(repo, fileService)
 	languageService := language.NewService(repo)
 	courseService := course.NewService(repo)
 	lessonService := lesson.NewService(repo)
-	// teacherService := teacher.NewService(repo)
-	// scheduleService := schedule.NewService(repo)
-	// reviewService := review.NewService(repo)
-	// imageService := image.NewService(minioService)
-	// categoryService := category.NewService(repo)
-	// skillService := skill.NewService(repo)
-	// complaintService := complaint.NewService(repo)
 
 	services := NewServices(
 		jwtService,
@@ -140,16 +96,6 @@ func New(ctx context.Context, config *config.Config, log *zap.Logger) (*Applicat
 		languageService,
 		courseService,
 		lessonService,
-	// 	kratosService,
-	// 	jwtService,
-	// 	teacherService,
-	// 	scheduleService,
-	// 	reviewService,
-	// 	imageService,
-	// 	categoryService,
-	// 	skillService,
-	// 	complaintService,
-	// 	commonService,
 	)
 
 	restServer := rest.NewServer(services, config.Server, log)

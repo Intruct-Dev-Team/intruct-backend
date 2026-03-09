@@ -94,7 +94,7 @@ func (h *UserHandlers) CompleteRegistration() http.HandlerFunc {
 		// if upload avatar
 		if req.Avatar != "" {
 
-			imageBytes, err := imgutils.DecodeImage(req.Avatar)
+			imageBytes, err := httputils.DecodeImage(req.Avatar)
 			if err != nil {
 				httputils.RespondWith400(w, err.Error(), h.log)
 

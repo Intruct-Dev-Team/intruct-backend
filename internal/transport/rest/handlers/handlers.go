@@ -52,36 +52,4 @@ func (h *Handlers) SetupRoutes(router *chi.Mux,
 	var lessonService lesson.LessonService = h.services
 	lessonHandlers := lesson.NewLessonHandlers(lessonService, h.log)
 	lessonHandlers.SetupLessonRoutes(router, jwtAuthMiddleware, systemAuthMiddleware)
-
-	// var teacherService teacher.TeacherService = h.services
-	// teacherHandlers := teacher.NewTeacherHandlers(teacherService, h.log)
-	// teacherHandlers.SetupTeacherRoutes(router, middlwares.ClassicAuth)
-
-	// var scheduleService schedule.ScheduleService = h.services
-	// scheduleHandlers := schedule.NewScheduleHandlers(scheduleService, h.log)
-	// scheduleHandlers.SetupScheduleRoutes(router, middlwares.ClassicAuth)
-
-	// var reviewService review.ReviewService = h.services
-	// reviewHandlers := review.NewReviewHandlers(reviewService, h.log)
-	// reviewHandlers.SetupReviewRoutes(router, middlwares.ClassicAuth)
-
-	// var lessonService lesson.LessonService = h.services
-	// lessonHandlers := lesson.NewLessonHandlers(lessonService, h.log)
-	// lessonHandlers.SetupLessonRoutes(router, middlwares.ClassicAuth)
-
-	// var imageService image.ImageService = h.services
-	// imageHandlers := image.NewImageHandlers(imageService, h.log)
-	// imageHandlers.SetupImageRoutes(router)
-
-	// var categoryService category.CategoryService = h.services
-	// categoryHandlers := category.NewCategoryHandlers(categoryService, h.log)
-	// categoryHandlers.SetupCategoryRoutes(router)
-
-	// var complaintService complaint.ComplaintService = h.services
-	// complaintHandlers := complaint.NewComplaintHandlers(complaintService, h.log)
-	// complaintHandlers.SetupComplaintRoutes(router, middlwares.ClassicAuth)
-
-	// var adminService admin.AdminService = h.services
-	// adminHandlers := admin.NewAdminHandlers(adminService, h.log)
-	// adminHandlers.SetupAdminRoutes(router, middlwares.ClassicAuth)
 }
